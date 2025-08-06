@@ -1,9 +1,13 @@
 import Authorization from "../pages/Authorization/Authorization"
 
+interface PublicAppProps {
+    setAuth: (value: boolean) => void
+}
 
-const PublicApp = () => {
+const PublicApp = ({setAuth}: PublicAppProps) => {
   return (
-    <Authorization/>
+    
+    <Authorization setAuth={setAuth}/>
   )
 }
 

@@ -3,7 +3,11 @@ import AppRouter from "../router/AppRouter"
 
 const PrivateApp = () => {
   return (
-    <AppRouter/>
+    <>
+        <AppRouter/>
+        <div>PrivateApp</div>
+    </>
+    
   )
 }
 
