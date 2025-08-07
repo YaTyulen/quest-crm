@@ -1,0 +1,42 @@
+@import '../../../colors.scss';
+
+.button {
+    padding: 10px 20px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.5s all;
+    font-weight: 700;
+
+    &--dark {
+        background-color: $cPrimary;
+        color: $cOutlineWhite;
+
+        &:hover {
+            background-color: $cButtonHover;
+        }
+    }
+
+    &--light{
+        background-color: $cPrimaryOpacity;
+        color: $cFontButtonDark;
+
+        &:hover {
+            background-color: $cPrimaryOpacityHover;
+            color: $cButtonHover;
+        }
+    }
+
+    &--white{
+        background-color: $cBackgroundWhite;
+        outline: 1px solid $cPrimary;
+        color: $cPrimary;
+
+        &:hover {
+            outline-color: $cPrimary;
+            color: $cOutlineWhite;
+            background-color: $cPrimary;
+        }
+    }
+}

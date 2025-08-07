@@ -3,6 +3,8 @@ import { auth } from '../../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
 import './Authorization.scss'
+import { Button, TextInput } from '../../components/ui-kit';
+import { PasswordInput } from '../../components/ui-kit'; 
 
 interface AuthProps {
     setAuth: (value: boolean) => void;
@@ -20,19 +22,23 @@ const Authorization = ({setAuth}:AuthProps) => {
     }
 
   return (
-    <form>
-        <label>
-            <span>Логин</span>
-            <input type='text' value={login} onChange={(e) => setLogin(e.target.value)}/>
-        </label>
-        <label>
-            <span>Пароль</span>
-            <input type='password' value={password} onChange={(e) => setPassword(e.target.value)}/>
-        </label>
+    <div className='auth'>
+        <div className='auth__header'>
+            <h2>Quest CRM</h2>
+            <div className='auth__label'>Сказки на ночь</div>
+        </div>
 
-        <button onClick={signIn}>Войти</button>
+        <form className='auth__form'>
+            <div className='auth__field'>
+                <TextInput label='Логин' value={login} onChange={(event: React.ChangeEvent<HTMLInputElement>) => setLogin(event.target.value)}/>
+                <PasswordInput label='Пароль' value={password} onChange={(event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}/>
+            </div>
+            
+            <Button color='white' onClick={(e:React.FormEvent) => signIn(e)}>Войти</Button>
         
-    </form>
+        </form>
+    </div>
+    
   )
 }
 
