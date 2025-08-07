@@ -7,7 +7,7 @@ import PrivateApp from './layout/PrivateApp'
 import PublicApp from './layout/PublicApp'
 
 function App() {
-  const [isAuth, setAuth] = useState<boolean>(false)
+  const [isAuth, setAuth] = useState<boolean>(true)
 
   return (
     isAuth ? <PrivateApp/> : <PublicApp setAuth={setAuth}/>
