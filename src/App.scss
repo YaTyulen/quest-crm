@@ -1,1 +1,5 @@
-
+.private-layout {
+    display: grid;
+    grid-template-columns: 60px auto;
+    height: 100%;
+}
