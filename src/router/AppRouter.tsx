@@ -8,18 +8,13 @@ import { ClientsList } from "../pages/ClientsList/ClientsList"
 
 const AppRouter = () => {
   return (
-    <>
-        <div>
-        <Routes>
-            <Route path="/" element={<ClientsList />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/create" element={<FormPage />} />
-        </Routes>
-        </div>
-
-        
-    </>
-    
+    <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/cliets" element={<ClientsList />} />
+        <Route path="/analitics" element={<About />} />
+        <Route path="/create" element={<FormPage />} />
+    </Routes>
   )
 }
 

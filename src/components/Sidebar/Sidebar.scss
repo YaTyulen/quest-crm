@@ -2,13 +2,14 @@
 
 
 .sidebar {
-    height: 100%;
+    height: calc(100% - 30px);
     width: 60px;
     background-color: $cPrimary;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     box-shadow: 10px 0 25px rgba(0, 0, 0, 0.15);
+    padding: 15px 0;
 
     &__links {
         display: flex;

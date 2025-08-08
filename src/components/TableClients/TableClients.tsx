@@ -3,6 +3,8 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase';
 import type firebase from 'firebase/compat/app';
 
+import './TableClients.scss'
+
 type Client = {
   id: string;
   name: string;
@@ -39,36 +41,33 @@ export const TableClients: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <h2>Список клиентов</h2>
-      <table border={1} cellPadding={8} cellSpacing={0}>
-        <thead>
-          <tr>
-            <th>Имя</th>
-            <th>Телефон</th>
-            <th>Квест</th>
-            <th>Дата</th>
-            <th>Количество игроков</th>
-            <th>Стоимость</th>
-            <th>Наличные?</th>
-            <th>Комментарий</th>
+    <table className='table-template' border={1} cellPadding={8} cellSpacing={0}>
+      <thead>
+        <tr>
+          <th>Имя</th>
+          <th>Телефон</th>
+          <th>Квест</th>
+          <th>Дата</th>
+          <th>Количество игроков</th>
+          <th>Стоимость</th>
+          <th>Наличные?</th>
+          <th>Комментарий</th>
+        </tr>
+      </thead>
+      <tbody>
+        {clients.map(client => (
+          <tr key={client.id}>
+            <td>{client.name}</td>
+            <td>{client.phone}</td>
+            <td>{client.quest}</td>
+            <td>{client.data.toDate().toLocaleString()}</td>
+            <td>{client.count}</td>
+            <td>{client.piece}</td>
+            <td>{client.isCash}</td>
+            <td>{client.note}</td>
           </tr>
-        </thead>
-        <tbody>
-          {clients.map(client => (
-            <tr key={client.id}>
-              <td>{client.name}</td>
-              <td>{client.phone}</td>
-              <td>{client.quest}</td>
-              <td>{client.data.toDate().toLocaleString()}</td>
-              <td>{client.count}</td>
-              <td>{client.piece}</td>
-              <td>{client.isCash}</td>
-              <td>{client.note}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+        ))}
+      </tbody>
+    </table>
   );
 };
