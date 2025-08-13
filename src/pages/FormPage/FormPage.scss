@@ -1,3 +1,11 @@
 .form {
     padding: 15px;
+
+    & form {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        width: 60%;
+        align-items: center;
+    }
 }
