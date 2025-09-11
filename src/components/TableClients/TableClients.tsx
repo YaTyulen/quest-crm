@@ -3,17 +3,18 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase';
 import type firebase from 'firebase/compat/app';
 
-import './TableClients.scss'
+import './TableClients.scss';
+import { formatDate } from '../../utils/formatDate';
 
 type Client = {
   id: string;
   name: string;
   phone: string;
   quest: string;
-  data: firebase.firestore.Timestamp;
+  data: string;
   count: number;
   piece: number;
-  isCash: boolean;
+  isCash: string;
   note: string;
 };
 
@@ -25,8 +26,8 @@ export const TableClients: React.FC = () => {
       try {
         const querySnapshot = await getDocs(collection(db, 'clients'));
         console.log(querySnapshot);
-        
-        const clientsData = querySnapshot.docs.map(doc => ({
+
+        const clientsData = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         })) as Client[];
@@ -41,7 +42,12 @@ export const TableClients: React.FC = () => {
   }, []);
 
   return (
-    <table className='table-template' border={1} cellPadding={8} cellSpacing={0}>
+    <table
+      className='table-template'
+      border={1}
+      cellPadding={8}
+      cellSpacing={0}
+    >
       <thead>
         <tr>
           <th>Имя</th>
@@ -55,15 +61,15 @@ export const TableClients: React.FC = () => {
         </tr>
       </thead>
       <tbody>
-        {clients.map(client => (
+        {clients.map((client) => (
           <tr key={client.id}>
             <td>{client.name}</td>
             <td>{client.phone}</td>
             <td>{client.quest}</td>
-            <td>{client.data.toDate().toLocaleString()}</td>
+            <td>{formatDate(Number(client.data))}</td>
             <td>{client.count}</td>
             <td>{client.piece}</td>
-            <td>{client.isCash}</td>
+            <td>{client.isCash === 'true' ? 'Да' : 'Нет'}</td>
             <td>{client.note}</td>
           </tr>
         ))}
