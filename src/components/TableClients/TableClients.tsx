@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase';
-import type firebase from 'firebase/compat/app';
 
 import './TableClients.scss';
 import { formatDate } from '../../utils/formatDate';
@@ -32,7 +31,7 @@ export const TableClients: React.FC = () => {
           ...doc.data(),
         })) as Client[];
 
-        setClients(clientsData);
+        setClients(clientsData.sort((a, b) => (b.data > a.data ? 1 : -1)));
       } catch (error) {
         console.error('Ошибка при загрузке клиентов:', error);
       }
@@ -66,7 +65,7 @@ export const TableClients: React.FC = () => {
             <td>{client.name}</td>
             <td>{client.phone}</td>
             <td>{client.quest}</td>
-            <td>{formatDate(Number(client.data))}</td>
+            <td>{formatDate(Number(client.data / 1000))}</td>
             <td>{client.count}</td>
             <td>{client.piece}</td>
             <td>{client.isCash === 'true' ? 'Да' : 'Нет'}</td>

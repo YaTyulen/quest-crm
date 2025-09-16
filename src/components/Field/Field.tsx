@@ -16,6 +16,14 @@ interface FieldProps {
   fieldInfo: IField;
 }
 
+/**
+ * Компонент для отображения поля формы.
+ *
+ * @param {FieldProps} props - объект с параметрами компонента.
+ * @param {IField} props.fieldInfo - объект с информацией о поле.
+ *
+ * @returns {JSX.Element} - отображаемый компонент.
+ */
 export const Field = ({ fieldInfo }: FieldProps) => {
   const [value, setValue] = useState(fieldInfo.value);
 
@@ -23,9 +31,10 @@ export const Field = ({ fieldInfo }: FieldProps) => {
   const { setRecordClient } = recordClientSlice.actions;
   const { recordClient } = useAppSelector((state) => state.recordClient);
 
-  console.log(recordClient);
-  console.log(fieldInfo.field);
-
+  /**
+   * Обработчик события изменения значения текстового поля.
+   * @param {React.ChangeEvent<HTMLInputElement>} event - событие изменения значения текстового поля.
+   */
   const handleChangeTextInput = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -33,12 +42,22 @@ export const Field = ({ fieldInfo }: FieldProps) => {
     setValue(((newRecordClient as any)[fieldInfo.field] = event.target.value));
     dispatch(setRecordClient(newRecordClient));
   };
+
+  /**
+   * Обработчик события изменения значения select-элемента.
+   * @param {React.ChangeEvent<HTMLInputElement>} event - событие изменения значения select-элемента.
+   */
   const handlerChangeSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('handlerChangeSelect');
+    let newRecordClient = { ...recordClient };
+    setValue(((newRecordClient as any)[fieldInfo.field] = event.target.value));
+    dispatch(setRecordClient(newRecordClient));
   };
 
+  /**
+   * Обработчик события изменения значения поля даты.
+   * @param {number | null} value - новое значение поля даты.
+   */
   const handlerChangeData = (value: number | null) => {
-    console.log('handlerChangeData', value);
     let newRecordClient = { ...recordClient };
     if (value !== null) {
       setValue(((newRecordClient as any)[fieldInfo.field] = String(value)));
@@ -48,6 +67,10 @@ export const Field = ({ fieldInfo }: FieldProps) => {
     dispatch(setRecordClient(newRecordClient));
   };
 
+  /**
+   * Обработчик события изменения значения чекбокса.
+   * @param {React.ChangeEvent<HTMLInputElement>} event - событие изменения значения чекбокса.
+   */
   const handleChangeCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
     let newRecordClient = { ...recordClient };
     setValue(

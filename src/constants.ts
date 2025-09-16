@@ -1,5 +1,6 @@
 import type { IField } from "./types/Field";
 
+// Константа полей формы для записи клиентов
 export const clientFields: IField[] = [
     {
         id: 1,

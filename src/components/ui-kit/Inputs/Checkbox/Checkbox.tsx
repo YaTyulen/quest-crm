@@ -9,9 +9,10 @@ interface CheckboxProps {
 
 /**
  *
- * @param {bool} checked - текущее состояние чекбокса
- * @param {function} onChange - функция обработки изменения состояния чекбокса
- * @param {bool} disabled - флаг для отключения чекбокса (необязательный пропс)
+ * @param label - Подпись к чекбоксу
+ * @param checked - состояние чекбокса
+ * @param onChange - функция обработки изменения состояния чекбокса
+ * @param disabled - флаг для отключения чекбокса (необязательный пропс)
  * @returns UI-компонент для чекбокса
  */
 export function Checkbox(props: CheckboxProps) {
