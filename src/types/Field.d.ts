@@ -3,5 +3,6 @@ export interface IField {
     field: string,
     field_ru: string,
     type: string,
+    options?: string[],
     value: string,
 }

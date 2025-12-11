@@ -1,5 +1,6 @@
 import type { IField } from "./types/Field";
 
+// Константа полей формы для записи клиентов
 export const clientFields: IField[] = [
     {
         id: 1,
@@ -20,6 +21,7 @@ export const clientFields: IField[] = [
         field: 'quest',
         field_ru: 'Квест',
         type: 'select',
+        options: ['quest1', 'quest2', 'quest3'],
         value: '',
     },
     {
@@ -48,13 +50,14 @@ export const clientFields: IField[] = [
         field: 'isCash',
         field_ru: 'Оплата наличными?',
         type: 'boolean',
-        value: '',
+        value: 'false',
     },
     {
         id: 8,
         field: 'agregator',
         field_ru: 'Агрегатор',
-        type: 'text',
+        type: 'select',
+        options: ['Мир Квестов', 'Топ Квестов', 'Квест Хантер', 'Реклама', 'Сарафанка'],
         value: '',
     },
     {

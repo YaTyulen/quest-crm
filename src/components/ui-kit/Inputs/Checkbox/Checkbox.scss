@@ -1,0 +1,82 @@
+$cTextColor: #777777;
+$cBlue: #3b82f6;
+$cLigthBlue: #3b82f6;
+$cWhite: #fff;
+$cGrey: #777777;
+$cLightGrey: #e5e7eb;
+
+
+.checkbox {
+  appearance: none;
+  min-width: 16px;
+  width: 16px;
+  height: 16px;
+  border: 0.5px solid $cTextColor;
+  border-radius: 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  transform: scale(1);
+
+  box-sizing: border-box;
+
+  &__container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  &__label {
+    position: relative;
+    left: 5px;
+    font-size: 16px;
+    color: $cTextColor;
+  }
+
+  &:hover {
+    border-color: $cBlue;
+  }
+
+  &:checked {
+    border-color: $cBlue;
+    background-color: $cBlue;
+  }
+
+  &:checked::after {
+    content: '';
+    position: absolute;
+    width: 5px;
+    height: 9px;
+    border: solid $cWhite;
+    border-width: 0 1.5px 1.5px 0;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  &:checked:hover {
+    border-color: $cLigthBlue;
+    background-color: $cLigthBlue;
+
+    &::after {
+      background-color: $cLigthBlue;
+    }
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    border-color: $cGrey;
+    background-color: $cLightGrey;
+  }
+
+  &:disabled:checked {
+    background-color: $cGrey;
+    border-color: v$cGrey;
+
+    &::after {
+      background-color: $cGrey;
+      border-color: $cLightGrey;
+    }
+  }
+}

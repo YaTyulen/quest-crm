@@ -4,7 +4,7 @@ import ChartSvg from '../../assets/chart.svg'
 import LogoutSvg from '../../assets/logout.svg'
 import TimeTableSvg from '../../assets/timetable.svg';
 
-import './Sidebar.scss'
+import './Sidebar.scss';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { signInSlice } from '../../store/slices';
@@ -48,5 +48,5 @@ export const Sidebar = () => {
             </li>
         </ul>
     </div>
-  )
-}
+  );
+};

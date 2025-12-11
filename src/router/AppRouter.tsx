@@ -19,7 +19,7 @@ const AppRouter = () => {
         <Route path="/timetable" element={<ScheduleGrid />}/>
         <Route path="/myschedule" element={<MySchedule />} />
     </Routes>
-  )
-}
+  );
+};
 
-export default AppRouter
+export default AppRouter;
