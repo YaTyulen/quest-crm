@@ -4,13 +4,13 @@ import { getFirestore } from 'firebase/firestore';
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB0NdOhuo6w6V5OeM2tNo6KYMvP6ujAqqI",
-  authDomain: "quest-crm.firebaseapp.com",
-  projectId: "quest-crm",
-  storageBucket: "quest-crm.firebasestorage.app",
-  messagingSenderId: "1093096235062",
-  appId: "1:1093096235062:web:2c2a5d03fc58973a5a3897",
-  measurementId: "G-47M4HXHKG6"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);
