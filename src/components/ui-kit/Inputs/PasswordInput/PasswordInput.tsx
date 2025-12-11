@@ -12,8 +12,6 @@ interface PasswordInputProps {
 
 export const PasswordInput = ({label, value, onChange}: PasswordInputProps) => {
     const [type, setType] = useState('password')
-
-    console.log(typeof Eye);
     
   return (
     <div className="password-input__container">

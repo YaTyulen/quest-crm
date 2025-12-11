@@ -1,16 +1,13 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-import { useState } from 'react'
 import './App.scss'
 import PrivateApp from './layout/PrivateApp'
 import PublicApp from './layout/PublicApp'
+import { useAppSelector } from './hooks/reduxHooks'
 
 function App() {
-  const [isAuth, setAuth] = useState<boolean>(true)
+  const { isAuth } = useAppSelector((state) => state.signIn);
 
   return (
-    isAuth ? <PrivateApp/> : <PublicApp setAuth={setAuth}/>
+    isAuth ? <PrivateApp/> : <PublicApp/>
   )
 }
 

@@ -5,19 +5,22 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import './Authorization.scss'
 import { Button, TextInput } from '../../components/ui-kit';
 import { PasswordInput } from '../../components/ui-kit'; 
+import { useAppDispatch } from '../../hooks/reduxHooks';
+import { signInSlice } from '../../store/slices';
 
-interface AuthProps {
-    setAuth: (value: boolean) => void;
-}
 
-const Authorization = ({setAuth}:AuthProps) => {
+const Authorization = () => {
     const [login, setLogin] = useState<string>('')
     const [password, setPassword] = useState<string>('')
+    const { setIsAuth } = signInSlice.actions;
+    const dispatch = useAppDispatch();
+
 
     const signIn = async(e: React.FormEvent) => {
         e.preventDefault();
         await signInWithEmailAndPassword(auth, login, password).then(() => {
-            setAuth(true)
+            dispatch(setIsAuth(true))
+            localStorage.setItem('isAuth', 'true')
         });
     }
 

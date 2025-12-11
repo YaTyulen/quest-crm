@@ -1,0 +1,89 @@
+/* src/components/ScheduleGrid/ScheduleGrid.css */
+.schedule-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.date-selector {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+  overflow-x: auto;
+  padding: 10px 0;
+}
+
+.date-btn {
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  min-width: 120px;
+  white-space: nowrap;
+  transition: all 0.3s;
+}
+
+.date-btn:hover {
+  background: #f0f0f0;
+}
+
+.date-btn.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.time-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.time-slot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: white;
+}
+
+.time-slot:hover {
+  background: #f9f9f9;
+  transform: translateX(5px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.time-label {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.time-users {
+  display: flex;
+  gap: 10px;
+}
+
+.users-count {
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.users-count.has-users {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.users-count.no-users {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
