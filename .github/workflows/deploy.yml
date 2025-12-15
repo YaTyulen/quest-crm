@@ -2,28 +2,50 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
+
+# Разрешить запись в репозиторий
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Разрешить только один одновременный деплой
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # Полная история для правильной работы git
 
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '20.x' # Используем Node.js 20
         cache: 'npm'
 
-    - name: Install dependencies
-      run: npm ci
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+
+    - name: Clean install dependencies
+      run: |
+        # Удаляем старый lock файл если есть проблемы
+        rm -f package-lock.json
+        rm -rf node_modules
+        npm cache clean --force
+        npm install
 
     - name: Build
       run: npm run build
@@ -36,8 +58,11 @@ jobs:
         VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
         VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
 
-    - name: Deploy to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@v4
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
       with:
-        folder: dist
-        branch: gh-pages
+        path: './dist'
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
