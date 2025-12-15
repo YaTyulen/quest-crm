@@ -1,6 +1,6 @@
-import HomeSvg from '../../assets/home.svg';
-import ListSvg from '../../assets/list.svg'
-import ChartSvg from '../../assets/chart.svg'
+// import HomeSvg from '../../assets/home.svg';
+// import ListSvg from '../../assets/list.svg'
+// import ChartSvg from '../../assets/chart.svg'
 import LogoutSvg from '../../assets/logout.svg'
 import TimeTableSvg from '../../assets/timetable.svg';
 

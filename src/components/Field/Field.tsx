@@ -38,7 +38,7 @@ export const Field = ({ fieldInfo }: FieldProps) => {
   const handleChangeTextInput = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    let newRecordClient = { ...recordClient };
+    const newRecordClient = { ...recordClient };
     setValue(((newRecordClient as any)[fieldInfo.field] = event.target.value));
     dispatch(setRecordClient(newRecordClient));
   };
@@ -47,8 +47,8 @@ export const Field = ({ fieldInfo }: FieldProps) => {
    * Обработчик события изменения значения select-элемента.
    * @param {React.ChangeEvent<HTMLInputElement>} event - событие изменения значения select-элемента.
    */
-  const handlerChangeSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let newRecordClient = { ...recordClient };
+  const handlerChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const newRecordClient = { ...recordClient };
     setValue(((newRecordClient as any)[fieldInfo.field] = event.target.value));
     dispatch(setRecordClient(newRecordClient));
   };
@@ -58,7 +58,7 @@ export const Field = ({ fieldInfo }: FieldProps) => {
    * @param {number | null} value - новое значение поля даты.
    */
   const handlerChangeData = (value: number | null) => {
-    let newRecordClient = { ...recordClient };
+    const newRecordClient = { ...recordClient };
     if (value !== null) {
       setValue(((newRecordClient as any)[fieldInfo.field] = String(value)));
     } else {
@@ -72,7 +72,7 @@ export const Field = ({ fieldInfo }: FieldProps) => {
    * @param {React.ChangeEvent<HTMLInputElement>} event - событие изменения значения чекбокса.
    */
   const handleChangeCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let newRecordClient = { ...recordClient };
+    const newRecordClient = { ...recordClient };
     setValue(
       ((newRecordClient as any)[fieldInfo.field] =
         event.target.checked.toString())

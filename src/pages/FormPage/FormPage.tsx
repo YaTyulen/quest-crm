@@ -5,7 +5,7 @@ import type { IField } from '../../types/Field';
 import { clientFields } from '.././../constants';
 
 import './FormPage.scss';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useAppSelector } from '../../hooks/redux';
 import type { IRecord } from '../../types/record';

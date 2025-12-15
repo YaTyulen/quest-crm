@@ -14,4 +14,10 @@ export default defineConfig({
       include: '**/*.svg'
     }),
   ],
-})
+  css: {
+    preprocessorOptions: {
+      scss: {
+        silenceDeprecations: ['import']
+      }
+    }
+}})

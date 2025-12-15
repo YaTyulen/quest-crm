@@ -1,10 +1,11 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
-import {signInReducer} from './slices';
+import {recordClientReducer, signInReducer} from './slices';
 
 // Собираем все редьюсеры
 const rootReducer = combineReducers({
   signIn: signInReducer,
+  recordClient: recordClientReducer,
 });
 
 // Функция для создания store

@@ -3,7 +3,6 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase';
 
 import './TableClients.scss';
-import { formatDate } from '../../utils/formatDate';
 
 type Client = {
   id: string;
@@ -65,7 +64,7 @@ export const TableClients: React.FC = () => {
             <td>{client.name}</td>
             <td>{client.phone}</td>
             <td>{client.quest}</td>
-            <td>{formatDate(Number(client.data / 1000))}</td>
+            {/* <td>{formatDate(Number(client.data / 1000))}</td> */}
             <td>{client.count}</td>
             <td>{client.piece}</td>
             <td>{client.isCash === 'true' ? 'Да' : 'Нет'}</td>
