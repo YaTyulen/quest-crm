@@ -20,4 +20,6 @@ export default defineConfig({
         silenceDeprecations: ['import']
       }
     }
-}})
+  },
+  base: '/quest-crm/'
+})

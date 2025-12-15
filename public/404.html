@@ -1,0 +1,25 @@
+<!-- public/404.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Перенаправление...</title>
+  <script>
+    // Редирект для GitHub Pages SPA
+    const path = window.location.pathname;
+    const isRepoPage = path.includes('/quest-crm/');
+    
+    if (!isRepoPage && path !== '/') {
+      window.location.href = '/quest-crm/' + path;
+    } else if (path === '/' || path === '/quest-crm') {
+      window.location.href = '/quest-crm/';
+    }
+  </script>
+</head>
+<body>
+  <noscript>
+    <p>Пожалуйста, включите JavaScript для работы приложения.</p>
+  </noscript>
+</body>
+</html>
