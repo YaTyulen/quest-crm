@@ -7,7 +7,10 @@ const PrivateApp = () => {
     <div className="private-layout">
         {/** Сайдбар и тип того, а в содержательной части - роутер */}
         <Sidebar/>
-        <AppRouter/>
+        <div className="page-container">
+          <AppRouter/>
+        </div>
+        
 
     </div>
     

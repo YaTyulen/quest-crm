@@ -1,77 +1,60 @@
-import React, { useEffect, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../../firebase';
-
+import React from 'react';
 import './TableClients.scss';
-
-type Client = {
-  id: string;
-  name: string;
-  phone: string;
-  quest: string;
-  data: string;
-  count: number;
-  piece: number;
-  isCash: string;
-  note: string;
-};
+import { formatDate } from '../../utils/formatDate';
+import { useClientsData } from '../../hooks/useClientsData';
 
 export const TableClients: React.FC = () => {
-  const [clients, setClients] = useState<Client[]>([]);
-
-  useEffect(() => {
-    const fetchClients = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, 'clients'));
-        console.log(querySnapshot);
-
-        const clientsData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Client[];
-
-        setClients(clientsData.sort((a, b) => (b.data > a.data ? 1 : -1)));
-      } catch (error) {
-        console.error('Ошибка при загрузке клиентов:', error);
-      }
-    };
-
-    fetchClients();
-  }, []);
+  const { clients } = useClientsData()
 
   return (
-    <table
-      className='table-template'
-      border={1}
-      cellPadding={8}
-      cellSpacing={0}
-    >
-      <thead>
-        <tr>
-          <th>Имя</th>
-          <th>Телефон</th>
-          <th>Квест</th>
-          <th>Дата</th>
-          <th>Количество игроков</th>
-          <th>Стоимость</th>
-          <th>Наличные?</th>
-          <th>Комментарий</th>
-        </tr>
-      </thead>
-      <tbody>
-        {clients.map((client) => (
-          <tr key={client.id}>
-            <td>{client.name}</td>
-            <td>{client.phone}</td>
-            <td>{client.quest}</td>
-            {/* <td>{formatDate(Number(client.data / 1000))}</td> */}
-            <td>{client.count}</td>
-            <td>{client.piece}</td>
-            <td>{client.isCash === 'true' ? 'Да' : 'Нет'}</td>
-            <td>{client.note}</td>
+    <div className="table-container">
+      <table className="table-template">
+        <thead>
+          <tr>
+            <th>Имя</th>
+            <th>Телефон</th>
+            <th>Квест</th>
+            <th>Дата</th>
+            <th>Игроки</th>
+            <th>Стоимость</th>
+            <th>Наличные</th>
+            <th>Комментарий</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {clients.map((client) => (
+            <tr key={client.id}>
+              <td>
+                <div className="client-name">{client.name}</div>
+              </td>
+              <td>
+                <a href={`tel:${client.phone}`} className="phone-link">
+                  {client.phone}
+                </a>
+              </td>
+              <td>
+                {console.log('client.quest', client.quest)}
+                <span className="quest-badge">{client.quest}</span>
+              </td>
+              <td className="date-cell">
+                {formatDate(Number(client.data / 1000))}
+              </td>
+              <td className="count-cell">
+                <span className="count-badge">{client.count}</span>
+              </td>
+              <td className="price-cell">
+                {client.piece.toLocaleString('ru-RU')} ₽
+              </td>
+              <td className={client.isCash === 'true' ? 'cash-yes' : 'cash-no'}>
+                {client.isCash === 'true' ? 'Да' : 'Нет'}
+              </td>
+              <td className="note-cell">
+                {client.note || <span className="no-note">—</span>}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };

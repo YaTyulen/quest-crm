@@ -8,7 +8,7 @@ export const ClientsList = () => {
   const navigate = useNavigate()
   return (
     <div className="clients-page">
-        <Button onClick={() => navigate('/create')}>Добавить запись</Button>
+        <Button onClick={() => navigate(`/${import.meta.env.VITE_BASE_URL}/create`)}>Добавить запись</Button>
         <TableClients/>
     </div>
   )

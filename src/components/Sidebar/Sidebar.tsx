@@ -8,14 +8,14 @@ import './Sidebar.scss';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { signInSlice } from '../../store/slices';
-import { useAppDispatch } from '../../hooks/reduxHooks';
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 
 export const Sidebar = () => {
     const navigate = useNavigate();
     const { signOut } = useAuth();
     const { setIsAuth } = signInSlice.actions;
+    const { role } = useAppSelector((state) => state.signIn);
     const dispatch = useAppDispatch();
-
 
     const logout = async () => {
         await signOut();
@@ -26,21 +26,23 @@ export const Sidebar = () => {
   return (
     <div className="sidebar">
         <ul className='sidebar__links'>
-            {/* <li className='sidebar__item' title='Главная' onClick={() => navigate('/home')}>
+            <li className='sidebar__item' title='Главная' onClick={() => navigate(`/${import.meta.env.VITE_BASE_URL}/home`)}>
                 <HomeSvg />
             </li>
-            <li className='sidebar__item' title='Список игр' onClick={() => navigate('/cliets')}>
+            {role === 'admin' && <li className='sidebar__item' title='Список игр' onClick={() => navigate(`/${import.meta.env.VITE_BASE_URL}/clients`)}>
                 <ListSvg/>
-            </li> */}
-            <li className='sidebar__item' title='Расписание' onClick={() => navigate('/timetable')}>
+            </li>}
+            
+            <li className='sidebar__item' title='Расписание' onClick={() => navigate(`/${import.meta.env.VITE_BASE_URL}/timetable`)}>
                 <TimeTableSvg/>
             </li>
-            <li className='sidebar__item' title='Моё Расписание' onClick={() => navigate('/myschedule')}>
+            <li className='sidebar__item' title='Моё Расписание' onClick={() => navigate(`/${import.meta.env.VITE_BASE_URL}/myschedule`)}>
                 <TimeTableSvg/>
             </li>
-            {/* <li className='sidebar__item' title='Аналитика' onClick={() => navigate('/analitics')}>
+            {role === 'admin' && <li className='sidebar__item' title='Аналитика' onClick={() => navigate(`/${import.meta.env.VITE_BASE_URL}/analytics`)}>
                 <ChartSvg/>
-            </li> */}
+            </li>}
+            
         </ul>
         <ul className='sidebar__links'>
             <li className='sidebar__item' onClick={() => logout()}>

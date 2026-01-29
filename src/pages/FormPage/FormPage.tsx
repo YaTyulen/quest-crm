@@ -34,7 +34,7 @@ const FormPage = () => {
    * @param {IRecord} record - объект с информацией о записи
    */
   const createRecord = async (record: IRecord) => {
-    navigate('/clients');
+    navigate(`/${import.meta.env.VITE_BASE_URL}/clients`);
     await addDoc(collection(db, 'clients'), record);
   };
 

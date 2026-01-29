@@ -1,0 +1,12 @@
+.chart {
+  max-width: 85vw;
+  height: 50vh;
+
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+
+  padding: 16px 16px 40px;
+
+  overflow-x: auto;
+}

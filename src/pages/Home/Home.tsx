@@ -1,7 +1,11 @@
+import './Home.scss';
 
 const Home = () => {
   return (
-    <div>Home</div>
+    <div className="home">
+      <h3>Домашняя страница</h3>
+      <div>Сейчас тут ничего нет, но возможно вы придумаете, что здесь нужно :)</div>
+    </div>
   )
 }
 
