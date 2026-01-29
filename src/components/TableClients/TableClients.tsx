@@ -33,11 +33,10 @@ export const TableClients: React.FC = () => {
                 </a>
               </td>
               <td>
-                {console.log('client.quest', client.quest)}
                 <span className="quest-badge">{client.quest}</span>
               </td>
               <td className="date-cell">
-                {formatDate(Number(client.data / 1000))}
+                {formatDate(Number(client.data) / 1000)}
               </td>
               <td className="count-cell">
                 <span className="count-badge">{client.count}</span>
