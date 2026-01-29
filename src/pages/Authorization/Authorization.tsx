@@ -9,6 +9,7 @@ import { useAppDispatch } from '../../hooks/reduxHooks';
 import { signInSlice } from '../../store/slices';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { BASE_PATH } from '../../constants';
 
 
 const Authorization = () => {
@@ -24,7 +25,7 @@ const Authorization = () => {
       e.preventDefault();
       await signInWithEmailAndPassword(auth, login, password).then(async (res) => {            
           dispatch(setIsAuth(true))
-          navigate(`/${import.meta.env.VITE_BASE_URL}/home`)
+          navigate(`/${BASE_PATH}/home`)
           localStorage.setItem('isAuth', 'true')
           const roles = await getRoles();      
 

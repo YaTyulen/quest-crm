@@ -6,18 +6,19 @@ import FormPage from "../pages/FormPage/FormPage"
 import { ClientsList } from "../pages/ClientsList/ClientsList"
 import { ScheduleGrid } from "../pages/Schedule/ScheduleGrid"
 import { MySchedule } from "../components/MySchedule/MySchedule"
+import { BASE_PATH } from "../constants"
 
 
 const AppRouter = () => {
   return (
     <Routes>
-        <Route path={`/${import.meta.env.VITE_BASE_URL}`} element={<Home />} />
-        <Route path={`/${import.meta.env.VITE_BASE_URL}/home`} element={<Home />} />
-        <Route path={`/${import.meta.env.VITE_BASE_URL}/clients`} element={<ClientsList />} />
-        <Route path={`/${import.meta.env.VITE_BASE_URL}/analytics`} element={<Analytics />} />
-        <Route path={`/${import.meta.env.VITE_BASE_URL}/create`} element={<FormPage />} />
-        <Route path={`/${import.meta.env.VITE_BASE_URL}/timetable`} element={<ScheduleGrid />}/>
-        <Route path={`/${import.meta.env.VITE_BASE_URL}/myschedule`} element={<MySchedule />} />
+        <Route path={`/${BASE_PATH}`} element={<Home />} />
+        <Route path={`/${BASE_PATH}/home`} element={<Home />} />
+        <Route path={`/${BASE_PATH}/clients`} element={<ClientsList />} />
+        <Route path={`/${BASE_PATH}/analytics`} element={<Analytics />} />
+        <Route path={`/${BASE_PATH}/create`} element={<FormPage />} />
+        <Route path={`/${BASE_PATH}/timetable`} element={<ScheduleGrid />}/>
+        <Route path={`/${BASE_PATH}/myschedule`} element={<MySchedule />} />
     </Routes>
   );
 };

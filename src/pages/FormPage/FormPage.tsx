@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Field } from '../../components/Field/Field';
 import { Button } from '../../components/ui-kit';
 import type { IField } from '../../types/Field';
-import { clientFields } from '.././../constants';
+import { BASE_PATH, clientFields } from '.././../constants';
 
 import './FormPage.scss';
 import { addDoc, collection } from 'firebase/firestore';
@@ -34,7 +34,7 @@ const FormPage = () => {
    * @param {IRecord} record - объект с информацией о записи
    */
   const createRecord = async (record: IRecord) => {
-    navigate(`/${import.meta.env.VITE_BASE_URL}/clients`);
+    navigate(`/${BASE_PATH}/clients`);
     await addDoc(collection(db, 'clients'), record);
   };
 

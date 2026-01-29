@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { signInSlice } from '../../store/slices';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
+import { BASE_PATH } from '../../constants';
 
 export const Sidebar = () => {
     const navigate = useNavigate();
@@ -26,20 +27,20 @@ export const Sidebar = () => {
   return (
     <div className="sidebar">
         <ul className='sidebar__links'>
-            <li className='sidebar__item' title='Главная' onClick={() => navigate(`/${import.meta.env.VITE_BASE_URL}/home`)}>
+            <li className='sidebar__item' title='Главная' onClick={() => navigate(`/${BASE_PATH}/home`)}>
                 <HomeSvg />
             </li>
-            {role === 'admin' && <li className='sidebar__item' title='Список игр' onClick={() => navigate(`/${import.meta.env.VITE_BASE_URL}/clients`)}>
+            {role === 'admin' && <li className='sidebar__item' title='Список игр' onClick={() => navigate(`/${BASE_PATH}/clients`)}>
                 <ListSvg/>
             </li>}
             
-            <li className='sidebar__item' title='Расписание' onClick={() => navigate(`/${import.meta.env.VITE_BASE_URL}/timetable`)}>
+            <li className='sidebar__item' title='Расписание' onClick={() => navigate(`/${BASE_PATH}/timetable`)}>
                 <TimeTableSvg/>
             </li>
-            <li className='sidebar__item' title='Моё Расписание' onClick={() => navigate(`/${import.meta.env.VITE_BASE_URL}/myschedule`)}>
+            <li className='sidebar__item' title='Моё Расписание' onClick={() => navigate(`/${BASE_PATH}/myschedule`)}>
                 <TimeTableSvg/>
             </li>
-            {role === 'admin' && <li className='sidebar__item' title='Аналитика' onClick={() => navigate(`/${import.meta.env.VITE_BASE_URL}/analytics`)}>
+            {role === 'admin' && <li className='sidebar__item' title='Аналитика' onClick={() => navigate(`/${BASE_PATH}/analytics`)}>
                 <ChartSvg/>
             </li>}
             
