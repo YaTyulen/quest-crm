@@ -39,3 +39,28 @@
     width: fit-content;
   }
 }
+
+@media (max-width: 600px) {
+  .period-filter {
+    gap: 16px;
+  }
+
+  .period-filter__buttons {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .period-filter__buttons button {
+    flex: 1 1 calc(50% - 5px); // 2 кнопки в ряд
+    padding: 10px 12px;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .period-filter__range {
+    width: calc(100% - 24px);
+    border: 1px solid #e0e0e0;
+    padding: 12px;
+  }
+}
+

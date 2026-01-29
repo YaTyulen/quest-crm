@@ -1,3 +1,5 @@
+import './DateRangePicker.scss';
+
 interface DateRange {
   from: string;
   to: string;
@@ -10,7 +12,7 @@ interface DateRangePickerProps {
 
 const DateRangePicker = ({ value, onChange }: DateRangePickerProps) => {
   return (
-    <div style={{ display: 'flex', gap: 8 }}>
+    <div className="date-range-picker">
       <input
         type="date"
         value={value.from}
@@ -18,8 +20,11 @@ const DateRangePicker = ({ value, onChange }: DateRangePickerProps) => {
           onChange({ ...value, from: e.target.value })
         }
       />
-      <span>—</span>
+
+      <span className="date-range-picker__separator">—</span>
+
       <input
+        className='date-range-picker__input'
         type="date"
         value={value.to}
         onChange={(e) =>

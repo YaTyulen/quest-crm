@@ -24,7 +24,7 @@ export const clientFields: IField[] = [
         field_ru: 'Квест',
         type: 'select',
         options: ['Теле-ужас', 'Хозяйка'],
-        value: '',
+        value: 'Теле-ужас',
     },
     {
         id: 4,
@@ -59,7 +59,7 @@ export const clientFields: IField[] = [
         field: 'agregator',
         field_ru: 'Агрегатор',
         type: 'select',
-        options: ['Мир Квестов', 'Топ Квестов', 'Квест Хантер', 'Реклама', 'Сарафанка'],
+        options: ['Мир Квестов', 'Топ Квестов', 'Квест Хантер', 'ВКонтакте', 'Реклама', 'Сарафанка', 'По знакомству'],
         value: '',
     },
     {

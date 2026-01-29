@@ -137,24 +137,24 @@
     }
   }
 
-  @media (max-width: 768px) {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-    border-radius: 8px;
+  // @media (max-width: 768px) {
+  //   display: block;
+  //   overflow-x: auto;
+  //   white-space: nowrap;
+  //   border-radius: 8px;
     
-    & thead tr,
-    & tbody tr {
-      display: table;
-      width: 100%;
-      min-width: 800px;
-    }
+  //   & thead tr,
+  //   & tbody tr {
+  //     display: table;
+  //     width: 100%;
+  //     min-width: 800px;
+  //   }
     
-    & th,
-    & td {
-      display: table-cell;
-    }
-  }
+  //   & th,
+  //   & td {
+  //     display: table-cell;
+  //   }
+  // }
 }
 
 // Дополнительные стили для статусов наличных
@@ -176,15 +176,8 @@
   }
 }
 
-// Обновление компонента TableClients для использования новых классов
-// В файле TableClients.tsx замените строку с isCash:
-// <td className={client.isCash === 'true' ? 'cash-yes' : 'cash-no'}>
-//   {client.isCash === 'true' ? 'Да' : 'Нет'}
-// </td>
-
 .table-container {
   padding: 20px;
-  background: #f7f9fc;
   min-height: 100vh;
 }
 
@@ -277,5 +270,110 @@
   
   &::before {
     background-color: #f56565;
+  }
+}
+
+@media (max-width: 1199px) and (min-width: 601px) {
+  .table-template {
+    min-width: 100%;
+    font-size: 13px;
+  }
+
+  .table-template thead tr,
+  .table-template tbody tr {
+    grid-template-columns:
+      1.2fr   // Имя
+      1.4fr   // Телефон
+      1.2fr   // Квест
+      1fr     // Дата
+      0.8fr   // Игроки
+      1fr     // Стоимость
+      0.8fr;  // Наличные
+  }
+
+  .table-template th:nth-child(8),
+  .table-template td:nth-child(8) {
+    display: none;
+  }
+
+  .table-template th,
+  .table-template td {
+    padding: 12px 10px;
+  }
+
+  .quest-badge {
+    font-size: 12px;
+    padding: 3px 8px;
+  }
+
+  .count-badge {
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    font-size: 12px;
+  }
+
+  .price-cell {
+    font-size: 13px;
+  }
+}
+
+
+@media (max-width: 600px) {
+  .table-template {
+    min-width: 100%;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .table-template thead {
+    display: none; // скрываем заголовки
+  }
+
+  .table-template tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .table-template tbody tr {
+    display: block;
+    background: white;
+    border-radius: 12px;
+    padding: 12px 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .table-template td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border: none;
+    font-size: 14px;
+
+    &::before {
+      content: attr(data-label);
+      font-weight: 600;
+      color: #6b7280;
+      margin-right: 12px;
+      white-space: nowrap;
+    }
+  }
+
+  .note-cell {
+    white-space: normal;
+    text-align: right;
+  }
+
+  .count-badge {
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    font-size: 13px;
+  }
+
+  .quest-badge {
+    font-size: 12px;
   }
 }

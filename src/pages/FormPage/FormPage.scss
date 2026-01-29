@@ -12,4 +12,14 @@
         width: 60%;
         align-items: center;
     }
+
+}
+
+
+@media (max-width: 600px) {
+    .form {
+        &__container {
+            width: 90%;
+        }
+    }
 }
