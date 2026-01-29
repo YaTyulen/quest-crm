@@ -41,3 +41,51 @@
         }
     }
 }
+
+@media (max-width: 600px) {
+  .sidebar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    height: 64px;
+    width: 100%;
+    padding: 0 ;
+
+    flex-direction: row;
+    align-items: center;
+
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+  }
+
+  .sidebar__links {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    gap: 0;
+  }
+
+  // нижний logout-блок
+  .sidebar__links:last-child {
+    display: none; // logout можно вынести в профиль / экран
+  }
+
+  .sidebar__item {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 12px;
+
+    & svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    &:active {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+}

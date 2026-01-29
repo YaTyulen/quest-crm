@@ -9,6 +9,8 @@ import { addDoc, collection } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useAppSelector } from '../../hooks/redux';
 import type { IRecord } from '../../types/record';
+import { recordClientSlice } from '../../store/slices';
+import { useDispatch } from 'react-redux';
 
 /**
  * Компонент для создания записи в базе данных.
@@ -18,8 +20,10 @@ import type { IRecord } from '../../types/record';
  */
 const FormPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { recordClient } = useAppSelector((state) => state.recordClient); // Новая запись, еще не добавленная в базу
+  const { clearRecordClient } = recordClientSlice.actions;
 
   /**
    * Создает форму с полями для ввода информации о клиенте.
@@ -36,6 +40,8 @@ const FormPage = () => {
   const createRecord = async (record: IRecord) => {
     navigate(`/${BASE_PATH}/clients`);
     await addDoc(collection(db, 'clients'), record);
+
+    dispatch(clearRecordClient()) // очищаем хранилище после выхода
   };
 
   return (

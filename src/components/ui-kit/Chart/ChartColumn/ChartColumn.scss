@@ -38,3 +38,18 @@
     word-break: break-word;
   }
 }
+
+@media (max-width: 600px) {
+  .column {
+    width: 36px;
+
+    &__value {
+      font-size: 11px;
+    }
+
+    &__label {
+      font-size: 11px;
+      max-width: 60px;
+    }
+  }
+}

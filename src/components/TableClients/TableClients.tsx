@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './TableClients.scss';
 import { formatDate } from '../../utils/formatDate';
 import { useClientsData } from '../../hooks/useClientsData';
+import { useDispatch } from 'react-redux';
+import { recordClientSlice } from '../../store/slices';
 
 export const TableClients: React.FC = () => {
   const { clients } = useClientsData()
+  const dispatch = useDispatch();
+  const { clearRecordClient } = recordClientSlice.actions;
+
+  useEffect(() => {
+    dispatch(clearRecordClient()) // очищаем хранилище
+  }, [])
 
   return (
     <div className="table-container">
@@ -24,35 +32,46 @@ export const TableClients: React.FC = () => {
         <tbody>
           {clients.map((client) => (
             <tr key={client.id}>
-              <td>
+              <td data-label="Имя">
                 <div className="client-name">{client.name}</div>
               </td>
-              <td>
+
+              <td data-label="Телефон">
                 <a href={`tel:${client.phone}`} className="phone-link">
                   {client.phone}
                 </a>
               </td>
-              <td>
+
+              <td data-label="Квест">
                 <span className="quest-badge">{client.quest}</span>
               </td>
-              <td className="date-cell">
+
+              <td data-label="Дата" className="date-cell">
                 {formatDate(Number(client.data) / 1000)}
               </td>
-              <td className="count-cell">
+
+              <td data-label="Игроки" className="count-cell">
                 <span className="count-badge">{client.count}</span>
               </td>
-              <td className="price-cell">
+
+              <td data-label="Стоимость" className="price-cell">
                 {client.piece.toLocaleString('ru-RU')} ₽
               </td>
-              <td className={client.isCash === 'true' ? 'cash-yes' : 'cash-no'}>
+
+              <td
+                data-label="Наличные"
+                className={client.isCash === 'true' ? 'cash-yes' : 'cash-no'}
+              >
                 {client.isCash === 'true' ? 'Да' : 'Нет'}
               </td>
-              <td className="note-cell">
+
+              <td data-label="Комментарий" className="note-cell">
                 {client.note || <span className="no-note">—</span>}
               </td>
             </tr>
           ))}
         </tbody>
+
       </table>
     </div>
   );

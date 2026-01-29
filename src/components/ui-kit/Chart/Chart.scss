@@ -10,3 +10,13 @@
 
   overflow-x: auto;
 }
+
+
+@media (max-width: 600px) {
+  .chart {
+    max-width: 100%;
+    height: 40vh;
+    padding: 12px 8px 32px;
+    gap: 10px;
+  }
+}

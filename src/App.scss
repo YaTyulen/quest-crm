@@ -1,9 +1,23 @@
 .private-layout {
     display: grid;
     grid-template-columns: 60px auto;
-    height: 100%;
+    height: 100vh;
+    overflow-y: auto;
 }
 
 .page-container {
     overflow-y: auto;
 }
+
+@media (max-width: 600px) {
+  .page-container, .private-layout {
+    padding-bottom: 70px;
+    width: 100vw;
+  }
+
+  .private-layout {
+    display: block;
+  }
+}
+
+
