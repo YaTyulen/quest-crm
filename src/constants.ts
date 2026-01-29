@@ -1,5 +1,7 @@
 import type { IField } from "./types/Field";
 
+export const BASE_PATH = 'quest-crm'
+
 // Константа полей формы для записи клиентов
 export const clientFields: IField[] = [
     {
