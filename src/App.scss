@@ -11,12 +11,12 @@
 
 @media (max-width: 600px) {
   .page-container, .private-layout {
-    padding-bottom: 70px;
     width: 100vw;
   }
 
   .private-layout {
     display: block;
+    height: calc(100vh - 70px);
   }
 }
 
