@@ -7,21 +7,33 @@ import { Button, TextInput } from '../../components/ui-kit';
 import { PasswordInput } from '../../components/ui-kit'; 
 import { useAppDispatch } from '../../hooks/reduxHooks';
 import { signInSlice } from '../../store/slices';
+import { useAuth } from '../../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 
 const Authorization = () => {
     const [login, setLogin] = useState<string>('')
     const [password, setPassword] = useState<string>('')
-    const { setIsAuth } = signInSlice.actions;
+    const { setIsAuth, setRole } = signInSlice.actions;
     const dispatch = useAppDispatch();
+    const { getRoles } = useAuth()
+    const navigate = useNavigate();
 
 
     const signIn = async(e: React.FormEvent) => {
-        e.preventDefault();
-        await signInWithEmailAndPassword(auth, login, password).then(() => {
-            dispatch(setIsAuth(true))
-            localStorage.setItem('isAuth', 'true')
-        });
+      e.preventDefault();
+      await signInWithEmailAndPassword(auth, login, password).then(async (res) => {            
+          dispatch(setIsAuth(true))
+          navigate(`/${import.meta.env.VITE_BASE_URL}/home`)
+          localStorage.setItem('isAuth', 'true')
+          const roles = await getRoles();      
+
+          if(roles && roles[0].role === 'admin' && roles[0].usersID.find((item) => item === res.user.uid)) {
+            dispatch(setRole('admin'))
+          } else {
+            dispatch(setRole('user'))
+          }
+      });
     }
 
   return (

@@ -21,7 +21,7 @@ export const clientFields: IField[] = [
         field: 'quest',
         field_ru: 'Квест',
         type: 'select',
-        options: ['quest1', 'quest2', 'quest3'],
+        options: ['Теле-ужас', 'Хозяйка'],
         value: '',
     },
     {
@@ -62,9 +62,35 @@ export const clientFields: IField[] = [
     },
     {
         id: 9,
+        field: 'admin',
+        field_ru: 'Кто админил?',
+        type: 'text',
+        value: '',
+    },
+    {
+        id: 10,
+        field: 'actor',
+        field_ru: 'Кто актерил?',
+        type: 'text',
+        value: '',
+    },
+    {
+        id: 11,
         field: 'note',
         field_ru: 'Комментарий',
         type: 'text',
         value: '',
     }
 ]
+
+
+// константа сетки расписания:
+export const TEMPORARY_GRID: {[key: string]: number} = {
+    "10:00": 0,
+    "12:00": 0,
+    "14:00": 0,
+    "16:00": 0,
+    "18:00": 0,
+    "20:00": 0,
+    "22:00": 0,
+}

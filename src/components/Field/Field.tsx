@@ -109,6 +109,9 @@ export const Field = ({ fieldInfo }: FieldProps) => {
           />
         );
       case 'select':
+        console.log('fieldInfo.options', fieldInfo.options);
+        console.log('value', value);
+        
         return (
           <Select
             label={field.field_ru}

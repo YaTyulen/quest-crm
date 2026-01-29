@@ -1,36 +1,281 @@
 @import '../../colors.scss';
 
 .table-template {
-    width: 100%;
-    border: none;
+  width: 100%;
+  min-width: 1060px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
+  border-radius: 12px;
+  overflow-x: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  background: white;
 
-    width: 100%;
-    border-collapse: collapse;
-    font-family: sans-serif;
-    font-size: 16px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-
-    & thead {
-        background-color: #5e81f433;
+  & thead {
+    background: linear-gradient(135deg, #5e81f4 0%, #4c6ef5 100%);
+    
+    tr {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 2fr;
     }
+  }
 
-    & tr {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 2fr;
+  & tbody {
+    tr {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 2fr;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background-color: #f8faff;
+        transform: translateY(-1px);
+        box-shadow: inset 0 0 0 1px rgba(94, 129, 244, 0.1);
+      }
     }
+  }
 
-    & th, & td {
-        border: none;
-        padding: 12px 15px;
-        border: 1px solid #ddd;
-        text-align: left;
+  & th {
+    color: white;
+    font-weight: 600;
+    padding: 18px 16px;
+    text-align: left;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: none;
+    position: relative;
+    
+    &:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 60%;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.2);
     }
+  }
 
-    & tbody tr:nth-child(even) {
-        background-color: #f9f9f9;
+  & td {
+    padding: 16px;
+    color: #333;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+    line-height: 1.5;
+    
+    &:first-child {
+      font-weight: 500;
+      color: #2d3748;
     }
+    
+    &:nth-child(4) { // Дата
+      color: #4a5568;
+      font-size: 13px;
+    }
+    
+    &:nth-child(5), // Количество игроков
+    &:nth-child(6) { // Стоимость
+      text-align: center;
+      font-weight: 600;
+    }
+    
+    &:nth-child(6) { // Стоимость
+      color: #2f855a;
+    }
+    
+    &:nth-child(7) { // Наличные?
+      text-align: center;
+      
+      &::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 6px;
+      }
+      
+      &:contains('Да')::before {
+        background-color: #48bb78;
+      }
+      
+      &:contains('Нет')::before {
+        background-color: #f56565;
+      }
+    }
+  }
 
-    & tbody tr:hover {
-        background-color: #f1f1f1;
+  & tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+    
+    &:last-child {
+      border-bottom: none;
+      
+      td {
+        border-bottom: none;
+      }
     }
+    
+    &:nth-child(even) {
+      background-color: #fafbfe;
+      
+      &:hover {
+        background-color: #f5f7ff;
+      }
+    }
+  }
+
+  // Адаптивность для мобильных устройств
+  @media (max-width: 1200px) {
+    font-size: 13px;
+    
+    & th,
+    & td {
+      padding: 14px 12px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    border-radius: 8px;
+    
+    & thead tr,
+    & tbody tr {
+      display: table;
+      width: 100%;
+      min-width: 800px;
+    }
+    
+    & th,
+    & td {
+      display: table-cell;
+    }
+  }
+}
+
+// Дополнительные стили для статусов наличных
+.cash-yes {
+  color: #2f855a;
+  font-weight: 600;
+  
+  &::before {
+    background-color: #48bb78 !important;
+  }
+}
+
+.cash-no {
+  color: #c53030;
+  font-weight: 600;
+  
+  &::before {
+    background-color: #f56565 !important;
+  }
+}
+
+// Обновление компонента TableClients для использования новых классов
+// В файле TableClients.tsx замените строку с isCash:
+// <td className={client.isCash === 'true' ? 'cash-yes' : 'cash-no'}>
+//   {client.isCash === 'true' ? 'Да' : 'Нет'}
+// </td>
+
+.table-container {
+  padding: 20px;
+  background: #f7f9fc;
+  min-height: 100vh;
+}
+
+.client-name {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.phone-link {
+  color: #4c6ef5;
+  text-decoration: none;
+  transition: color 0.2s;
+  
+  &:hover {
+    color: #364fc7;
+    text-decoration: underline;
+  }
+}
+
+.quest-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  background: #e9ecef;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #495057;
+}
+
+.count-badge {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+  border-radius: 50%;
+  background: #4c6ef5;
+  color: white;
+  font-weight: 600;
+  text-align: center;
+}
+
+.date-cell {
+  font-size: 13px;
+  color: #6c757d;
+}
+
+.price-cell {
+  font-weight: 600;
+  color: #2f855a;
+}
+
+.note-cell {
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.no-note {
+  color: #adb5bd;
+  font-style: italic;
+}
+
+.cash-yes, .cash-no {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  
+  &::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+}
+
+.cash-yes {
+  color: #2f855a;
+  
+  &::before {
+    background-color: #48bb78;
+  }
+}
+
+.cash-no {
+  color: #c53030;
+  
+  &::before {
+    background-color: #f56565;
+  }
 }

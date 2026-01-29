@@ -1,0 +1,41 @@
+.pie-chart {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  &__diagram {
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+  }
+
+  &__legend {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+
+  &__legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  &__legend-label {
+    font-weight: 500;
+  }
+
+  &__legend-value {
+    color: #666;
+  }
+}
+

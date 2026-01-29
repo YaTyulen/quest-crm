@@ -1,0 +1,1 @@
+export type Preset = '7d' | '30d' | 'all' | 'custom';
