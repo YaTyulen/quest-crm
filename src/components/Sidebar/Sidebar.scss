@@ -52,9 +52,11 @@
     height: 64px;
     width: 100%;
     padding: 0 ;
+    gap: 0;
 
     flex-direction: row;
     align-items: center;
+    justify-content: center;
 
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
     z-index: 1000;
@@ -62,15 +64,14 @@
 
   .sidebar__links {
     flex-direction: row;
-    justify-content: space-around;
+    //justify-content: space-around;
     align-items: center;
-    width: 100%;
     gap: 0;
   }
 
   // нижний logout-блок
   .sidebar__links:last-child {
-    display: none; // logout можно вынести в профиль / экран
+    //justify-content: end;
   }
 
   .sidebar__item {
