@@ -9,8 +9,13 @@ const PrivateApp = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // срабатывает только при reload
-    if (performance.getEntriesByType('navigation')[0]?.type === 'reload') {
+    const entry = performance.getEntriesByType('navigation')[0];
+
+    if (
+      entry &&
+      'type' in entry &&
+      entry.type === 'reload'
+    ) {
       navigate(`/${BASE_PATH}/home`, { replace: true });
     }
   }, []);
