@@ -249,6 +249,12 @@
   }
 }
 
+@media (max-width: 600px) {
+  .my-schedule {
+    margin-bottom: 70px;
+  }
+}
+
 @media (max-width: 480px) {
   .my-schedule {
     .slots-grid {
