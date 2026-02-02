@@ -2,11 +2,12 @@
     display: grid;
     grid-template-columns: 60px auto;
     height: 100vh;
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 
 .page-container {
     overflow-y: auto;
+    height: 100%;
 }
 
 @media (max-width: 600px) {

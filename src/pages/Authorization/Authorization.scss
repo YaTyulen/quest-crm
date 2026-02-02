@@ -36,3 +36,51 @@
         gap: 20px;
     }
 }
+
+@media (max-width: 600px) {
+    .auth {
+        gap: 10px;
+
+        &__header {
+            h2 {
+                font-size: 34px;
+            }
+        }
+
+        &__label {
+            font-size: 20px;
+        }
+
+        &__form {
+            width: 85%;
+        }
+
+        &__field {
+            gap: 40px;
+        }
+
+        label.text-input__label, 
+        label.password-input__label {
+            font-size: 18px;
+            top: -23px;
+        }
+
+        input {
+            font-size: 20px;
+        }
+
+
+        .password-input__button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 32px;
+            height: 32px;
+        }
+
+        svg {
+            width: 24px;
+            height: 24px;
+        }
+    }
+}
