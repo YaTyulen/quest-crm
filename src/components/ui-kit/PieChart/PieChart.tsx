@@ -4,7 +4,7 @@ interface PieChartProps {
     data: {[key: string]: number}
 }
 
-const COLORS = ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff'];
+const COLORS = ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff', '#ff0000', '#000d81', '#00ff0d', '#ff8717', '#117000'];
 
 const PieChart = ({ data }: PieChartProps) => {
     const entries = Object.entries(data);   

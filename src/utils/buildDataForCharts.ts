@@ -71,3 +71,52 @@ export const fillInObjectPrice = (clients: Client[]) => {
     }
     return data
 }
+
+
+/* Заполняем объект данными для графика месяц - выручка */
+export const fillInObjectIncome = (clients: Client[]) => {
+    let data = buildObjectDate()
+    
+    for(let client of clients) {
+        let current = new Date(Number(client.data));
+
+        if(data[`${Months[current.getMonth() + 1]} ${current.getFullYear()}`] !== undefined ){              
+            data[`${Months[current.getMonth() + 1]} ${current.getFullYear()}`] += Number(client.piece);
+        } 
+    }
+    return data
+}
+
+/* Заполняем объект данными для графика месяц - прибыль */
+export const fillInObjectProfit = (clients: Client[]) => {
+    let data = buildObjectDate()
+    
+    for(let client of clients) {
+        let current = new Date(Number(client.data));
+
+        let price = Number(client.piece);
+
+        switch (client.agregator) {
+            case 'Мир Квестов':
+                price = price*0.7
+                break;
+            case 'Квест Хантер':
+                price = price*0.8
+                break;
+            default:
+                break;
+        }
+
+        if(client.admin !== 'Тима' || client.admin !== 'Яна'){
+            price -= 500;
+        }
+        if(client.actor !== 'Тима'){
+            price -= 500;
+        }
+
+        if(data[`${Months[current.getMonth() + 1]} ${current.getFullYear()}`] !== undefined ){              
+            data[`${Months[current.getMonth() + 1]} ${current.getFullYear()}`] += price;
+        } 
+    }
+    return data
+}
