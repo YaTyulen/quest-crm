@@ -107,7 +107,7 @@ export const fillInObjectProfit = (clients: Client[]) => {
                 break;
         }
 
-        if(client.admin !== 'Тима' || client.admin !== 'Яна'){
+        if(client.admin !== 'Тима' && client.admin !== 'Яна'){
             price -= 500;
         }
         if(client.actor !== 'Тима'){

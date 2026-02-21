@@ -8,6 +8,9 @@ export interface Client {
   piece: number;
   isCash: string;
   note: string;
+  agregator: string;
+  admin: string;
+  actor: string;
 };
 
 export type ChartType = 'bar' | 'pie' | 'line';
