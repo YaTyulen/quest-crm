@@ -36,7 +36,7 @@ const FormPage = () => {
     .map(u => u.displayName)];
 
   const actors = ['Не указан', ...users
-    .filter(u => u.role === 'actor')
+    .filter(u => u.role === 'actor' || u.role === 'admin')
     .map(u => u.displayName)];
 
   const buildForm = () => {
