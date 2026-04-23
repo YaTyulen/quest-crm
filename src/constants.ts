@@ -2,6 +2,8 @@ import type { IField } from "./types/Field";
 
 export const BASE_PATH = 'quest-crm'
 
+export const agregators = ['Мир Квестов', 'Топ Квестов', 'Квест Хантер', 'ВКонтакте', 'Реклама', 'Сарафанка', 'По знакомству']
+
 // Константа полей формы для записи клиентов
 export const clientFields: IField[] = [
     {
@@ -59,7 +61,7 @@ export const clientFields: IField[] = [
         field: 'agregator',
         field_ru: 'Агрегатор',
         type: 'select',
-        options: ['Мир Квестов', 'Топ Квестов', 'Квест Хантер', 'ВКонтакте', 'Реклама', 'Сарафанка', 'По знакомству'],
+        options: agregators,
         value: '',
     },
     {

@@ -1,0 +1,27 @@
+name: Weekly Schedule Reminder
+
+on:
+  schedule:
+    - cron: '0 7 * * 0'  # каждое воскресенье 07:00 UTC = 10:00 МСК
+  workflow_dispatch:      # ручной запуск для тестирования
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: scripts
+
+      - name: Send VK reminders
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          VK_COMMUNITY_TOKEN: ${{ secrets.VK_COMMUNITY_TOKEN }}
+        run: node scripts/send-vk-reminders.mjs

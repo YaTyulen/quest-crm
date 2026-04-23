@@ -1,4 +1,4 @@
-import { TEMPORARY_GRID } from "../constants";
+import { agregators, TEMPORARY_GRID } from "../constants";
 import type { Client } from "../types/client";
 import { Months } from "./calendar";
 
@@ -69,6 +69,7 @@ export const fillInObjectPrice = (clients: Client[]) => {
         const key = String(client.piece);
         data[key] = (data[key] ?? 0) + 1;
     }
+
     return data
 }
 
@@ -118,5 +119,20 @@ export const fillInObjectProfit = (clients: Client[]) => {
             data[`${Months[current.getMonth() + 1]} ${current.getFullYear()}`] += price;
         } 
     }
+    return data
+}
+
+/* Заполняем объект данными для графика агрегатор - количество игр */
+export const fillInObjectAgregaror = (clients: Client[]) => {
+    let data: Record<string, number> = {}
+
+    for (let agregator of agregators) {
+        data[agregator] = 0;
+    }
+
+    for(let client of clients) {
+        if(data[client.agregator] !== undefined) data[client.agregator] += 1;
+    }
+
     return data
 }

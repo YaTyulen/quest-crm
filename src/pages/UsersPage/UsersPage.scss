@@ -1,0 +1,124 @@
+$cPrimary: #090dff;
+
+.users-page {
+  width: calc(100% - 80px);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+
+  &__section {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #222;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 400px;
+  }
+
+  &__error {
+    color: #e33;
+    font-size: 14px;
+  }
+
+  &__success {
+    color: #1a9e2e;
+    font-size: 14px;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+      background: linear-gradient(135deg, $cPrimary, #6b6fff);
+      color: #fff;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+      color: #333;
+    }
+
+    tr:hover td {
+      background-color: #f5f5ff;
+    }
+  }
+
+  &__role-select {
+    border: none;
+    border-bottom: 2px solid #777;
+    background: transparent;
+    padding: 4px 2px;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+
+    &:focus {
+      border-color: $cPrimary;
+    }
+  }
+
+  &__vk-cell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__vk-input {
+    border: none;
+    border-bottom: 2px solid #777;
+    background: transparent;
+    padding: 4px 2px;
+    font-size: 14px;
+    outline: none;
+    width: 110px;
+
+    &:focus {
+      border-color: $cPrimary;
+    }
+
+    &::placeholder {
+      color: #bbb;
+    }
+  }
+
+  &__vk-save {
+    border: none;
+    background: $cPrimary;
+    color: #fff;
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    &:hover:not(:disabled) {
+      opacity: 0.85;
+    }
+  }
+}

@@ -8,15 +8,16 @@ interface PasswordInputProps {
     label: string,
     value: string,
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+    autoComplete?: string
 }
 
-export const PasswordInput = ({label, value, onChange}: PasswordInputProps) => {
+export const PasswordInput = ({label, value, onChange, autoComplete}: PasswordInputProps) => {
     const [type, setType] = useState('password')
-    
+
   return (
     <div className="password-input__container">
         <div className='password-input__field'>
-            <input name={label} className="password-input__input" type={type} value={value} placeholder='' onChange={onChange}/>
+            <input name={label} className="password-input__input" type={type} value={value} placeholder='' onChange={onChange} autoComplete={autoComplete}/>
             <label className="password-input__label">{label}</label>
         </div>
         

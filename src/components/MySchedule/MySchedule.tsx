@@ -5,9 +5,11 @@ import { db } from '../../firebase';
 import './MySchedule.scss';
 import { useAuth } from '../../hooks/useAuth';
 import { generateWeekDates, timeSlots } from '../../utils/scheduleUtils';
+import { useAppSelector } from '../../hooks/reduxHooks';
 
 export const MySchedule: React.FC = () => {
   const { user } = useAuth();
+  const role = useAppSelector((state) => state.signIn.role);
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [availability, setAvailability] = useState<Record<string, Record<string, boolean>>>({});
   const [loading, setLoading] = useState(true);
@@ -49,7 +51,8 @@ export const MySchedule: React.FC = () => {
           userEmail: user.email || '',
           availability: {},
           updatedAt: new Date(),
-          isActive: true
+          isActive: true,
+          role: role ?? 'operator',
         };
         await setDoc(scheduleRef, initialData);
         console.log('Создано новое расписание');

@@ -8,13 +8,16 @@ interface SelectProps {
 }
 
 export const Select = ({ label, value, options, onChange }: SelectProps) => {
-  console.log(value);
-  
   return (
     <div className='select-input__container'>
-      <select className='select-input__input' name={label} onChange={(event: React.ChangeEvent<HTMLSelectElement>) => onChange(event)}>
+      <select
+        className='select-input__input'
+        name={label}
+        value={value}
+        onChange={onChange}
+      >
         {options.map((option) => (
-          <option value={option}>{option}</option>
+          <option key={option} value={option}>{option}</option>
         ))}
       </select>
       <label className='select-input__label'>{label}</label>

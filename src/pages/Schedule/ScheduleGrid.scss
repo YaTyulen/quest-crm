@@ -59,6 +59,15 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
+.time-slot.understaffed {
+  border-color: #f5c6cb;
+  background: #fff5f5;
+
+  &:hover {
+    background: #fde8e8;
+  }
+}
+
 .time-label {
   font-weight: bold;
   font-size: 1.1em;
@@ -66,7 +75,9 @@
 
 .time-users {
   display: flex;
-  gap: 10px;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .users-count {
@@ -88,8 +99,73 @@
   border: 1px solid #f5c6cb;
 }
 
+.cannot-work-indicator {
+  position: relative;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  font-weight: 600;
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  cursor: default;
+  user-select: none;
+
+  &::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    right: 0;
+    background: #333;
+    color: #fff;
+    padding: 5px 9px;
+    border-radius: 6px;
+    font-size: 0.82em;
+    font-weight: 400;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 10;
+  }
+
+  &:hover::after {
+    opacity: 1;
+  }
+}
+
+.not-filled-banner {
+  margin: 12px 0;
+  padding: 10px 14px;
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  color: #856404;
+
+  &__title {
+    font-weight: 600;
+    margin-right: 6px;
+  }
+}
+
 @media (max-width: 600px) {
   .schedule-container {
     margin-bottom: 70px;
+  }
+
+  .time-slot {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+
+    &:hover {
+      transform: none;
+    }
+  }
+
+  .time-users {
+    width: 100%;
+    justify-content: flex-start;
   }
 }

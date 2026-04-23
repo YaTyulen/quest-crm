@@ -1,4 +1,5 @@
 import { Timestamp } from 'firebase/firestore';
+import type { Role } from './roles';
 
 export interface ScheduleSlot {
   time: string;
@@ -16,8 +17,9 @@ export interface UserSchedule {
   availability: {
     [date: string]: DaySchedule;
   };
-  updatedAt: Timestamp | Date; 
+  updatedAt: Timestamp | Date;
   isActive: boolean;
+  role?: Role;
 }
 
 export interface AvailabilityInfo {
