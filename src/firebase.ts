@@ -1,7 +1,6 @@
-// src/firebase.ts
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { getAuth } from "firebase/auth";
+import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyB0NdOhuo6w6V5OeM2tNo6KYMvP6ujAqqI",
@@ -15,7 +14,12 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
 const auth = getAuth(app);
+
+export const getSecondaryAuth = () => {
+  const existing = getApps().find(a => a.name === 'secondary');
+  const secondaryApp = existing ?? initializeApp(firebaseConfig, 'secondary');
+  return getAuth(secondaryApp);
+};
 
 export { auth, db };

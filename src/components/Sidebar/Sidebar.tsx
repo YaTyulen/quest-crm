@@ -33,7 +33,10 @@ export const Sidebar = () => {
             {role === 'admin' && <li className='sidebar__item' title='Список игр' onClick={() => navigate(`/${BASE_PATH}/clients`)}>
                 <ListSvg/>
             </li>}
-            
+            {role === 'admin' && <li className='sidebar__item' title='Пользователи' onClick={() => navigate(`/${BASE_PATH}/users`)}>
+                <ListSvg/>
+            </li>}
+
             <li className='sidebar__item' title='Расписание' onClick={() => navigate(`/${BASE_PATH}/timetable`)}>
                 <TimeTableSvg/>
             </li>

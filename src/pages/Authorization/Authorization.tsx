@@ -4,38 +4,36 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 
 import './Authorization.scss';
 import { Button, TextInput } from '../../components/ui-kit';
-import { PasswordInput } from '../../components/ui-kit'; 
+import { PasswordInput } from '../../components/ui-kit';
 import { useAppDispatch } from '../../hooks/reduxHooks';
 import { signInSlice } from '../../store/slices';
-import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { BASE_PATH } from '../../constants';
+import { getUserProfile } from '../../utils/userUtils';
 
 
 const Authorization = () => {
-    const [login, setLogin] = useState<string>('')
-    const [password, setPassword] = useState<string>('')
-    const { setIsAuth, setRole } = signInSlice.actions;
-    const dispatch = useAppDispatch();
-    const { getRoles } = useAuth()
-    const navigate = useNavigate();
+  const [login, setLogin] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
+  const { setIsAuth, setRole } = signInSlice.actions;
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-
-    const signIn = async(e: React.FormEvent) => {
-      e.preventDefault();
-      await signInWithEmailAndPassword(auth, login, password).then(async (res) => {            
-          dispatch(setIsAuth(true))
-          navigate(`/${BASE_PATH}/home`)
-          localStorage.setItem('isAuth', 'true')
-          const roles = await getRoles();      
-
-          if(roles && roles[0].role === 'admin' && roles[0].usersID.find((item) => item === res.user.uid)) {
-            dispatch(setRole('admin'))
-          } else {
-            dispatch(setRole('user'))
-          }
-      });
+  const signIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    try {
+      const res = await signInWithEmailAndPassword(auth, login, password);
+      const profile = await getUserProfile(res.user.uid);
+      dispatch(setRole(profile?.role ?? 'operator'));
+      dispatch(setIsAuth(true));
+      localStorage.setItem('isAuth', 'true');
+      navigate(`/${BASE_PATH}/home`);
+    } catch {
+      setError('Неверный логин или пароль');
     }
+  };
 
   return (
     <div className='auth'>
@@ -61,6 +59,8 @@ const Authorization = () => {
             }
           />
         </div>
+
+        {error && <div className='auth__error'>{error}</div>}
 
         <Button color='white' onClick={(e: React.FormEvent) => signIn(e)}>
           Войти

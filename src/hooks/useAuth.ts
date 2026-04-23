@@ -1,13 +1,8 @@
-// src/hooks/useAuth.ts
 import { useEffect, useState } from 'react';
-import {  
-  onAuthStateChanged, 
-  signOut as firebaseSignOut, 
-  type User
-} from 'firebase/auth';
-import { auth, db } from '../firebase';
-import type { Roles } from '../types/roles';
-import { collection, getDocs } from 'firebase/firestore';
+import { onAuthStateChanged, signOut as firebaseSignOut, type User } from 'firebase/auth';
+import { auth } from '../firebase';
+import { getUserProfile } from '../utils/userUtils';
+import type { Role } from '../types/roles';
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -18,7 +13,6 @@ export const useAuth = () => {
       setUser(currentUser);
       setLoading(false);
     });
-
     return unsubscribe;
   }, []);
 
@@ -26,21 +20,15 @@ export const useAuth = () => {
     await firebaseSignOut(auth);
   };
 
-  const getRoles = async () => {
+  const getUserRole = async (uid: string): Promise<Role | null> => {
     try {
-      const querySnapshot = await getDocs(collection(db, 'roles'));
-      const roles = querySnapshot.docs.map((doc) => ({
-        role: doc.id,
-        ...doc.data(),
-      })) as Roles[];
-
-      return roles;
-      
+      const profile = await getUserProfile(uid);
+      return profile?.role ?? null;
     } catch (error) {
-      console.error('Ошибка при загрузке ролей:', error);
+      console.error('Ошибка при загрузке роли:', error);
+      return null;
     }
-  }
-  
+  };
 
-  return { user, loading, signOut, getRoles };
+  return { user, loading, signOut, getUserRole };
 };
