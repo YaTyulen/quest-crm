@@ -1,10 +1,12 @@
 import type { IField } from "./types/Field";
 
-export const BASE_PATH = 'quest-crm'
+export const BASE_PATH = 'quest-crm';
 
-export const agregators = ['Мир Квестов', 'Топ Квестов', 'Квест Хантер', 'ВКонтакте', 'Реклама', 'Сарафанка', 'По знакомству']
+export const agregators = ['Мир Квестов', 'Топ Квестов', 'Квест Хантер', 'ВКонтакте', 'Реклама', 'Сарафанка', 'По знакомству'];
 
-// Константа полей формы для записи клиентов
+// Константа полей формы для записи клиентов.
+// Поля «Оператор» и «Актёр» намеренно отсутствуют здесь:
+// они рендерятся как отдельные Select с данными из Firestore в FormPage и EditPage.
 export const clientFields: IField[] = [
     {
         id: 1,
@@ -65,27 +67,13 @@ export const clientFields: IField[] = [
         value: '',
     },
     {
-        id: 9,
-        field: 'admin',
-        field_ru: 'Кто админил?',
-        type: 'text',
-        value: '',
-    },
-    {
-        id: 10,
-        field: 'actor',
-        field_ru: 'Кто актерил?',
-        type: 'text',
-        value: '',
-    },
-    {
         id: 11,
         field: 'note',
         field_ru: 'Комментарий',
         type: 'text',
         value: '',
-    }
-]
+    },
+];
 
 
 // константа сетки расписания:
@@ -97,4 +85,4 @@ export const TEMPORARY_GRID: {[key: string]: number} = {
     "18:00": 0,
     "20:00": 0,
     "22:00": 0,
-}
+};

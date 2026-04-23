@@ -11,6 +11,7 @@ export interface Client {
   agregator: string;
   admin: string;
   actor: string;
+  time?: string;
 };
 
 export type ChartType = 'bar' | 'pie' | 'line';

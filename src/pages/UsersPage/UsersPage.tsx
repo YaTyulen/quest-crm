@@ -29,6 +29,9 @@ const UsersPage = () => {
   const [sendingReminders, setSendingReminders] = useState(false);
   const [reminderStatus, setReminderStatus] = useState<'success' | 'error' | null>(null);
 
+  const [sendingGameReminders, setSendingGameReminders] = useState(false);
+  const [gameReminderStatus, setGameReminderStatus] = useState<'success' | 'error' | null>(null);
+
   useEffect(() => {
     getAllUsers()
       .then(data => {
@@ -79,6 +82,31 @@ const UsersPage = () => {
     }
   };
 
+  const handleSendGameReminders = async () => {
+    setSendingGameReminders(true);
+    setGameReminderStatus(null);
+    try {
+      const res = await fetch(
+        'https://api.github.com/repos/YaTyulen/quest-crm/actions/workflows/game-reminders.yml/dispatches',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${import.meta.env.VITE_GITHUB_TOKEN}`,
+            Accept: 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ref: 'main' }),
+        }
+      );
+      setGameReminderStatus(res.status === 204 ? 'success' : 'error');
+    } catch {
+      setGameReminderStatus('error');
+    } finally {
+      setSendingGameReminders(false);
+    }
+  };
+
   const handleCreateUser = async () => {
     if (!newEmail || !newPassword || !newDisplayName) {
       setError('Заполните все поля');
@@ -120,6 +148,15 @@ const UsersPage = () => {
             <div className='users-page__success'>Рассылка запущена — сообщения придут в течение минуты</div>
           )}
           {reminderStatus === 'error' && (
+            <div className='users-page__error'>Ошибка запуска — проверь VITE_GITHUB_TOKEN в .env</div>
+          )}
+          <Button color='dark' onClick={handleSendGameReminders} disabled={sendingGameReminders}>
+            {sendingGameReminders ? 'Запускаем...' : 'Напомнить об играх завтра'}
+          </Button>
+          {gameReminderStatus === 'success' && (
+            <div className='users-page__success'>Рассылка запущена — сообщения придут в течение минуты</div>
+          )}
+          {gameReminderStatus === 'error' && (
             <div className='users-page__error'>Ошибка запуска — проверь VITE_GITHUB_TOKEN в .env</div>
           )}
         </div>
