@@ -13,6 +13,11 @@
         align-items: center;
     }
 
+    &__actions {
+        display: flex;
+        gap: 12px;
+    }
+
 }
 
 

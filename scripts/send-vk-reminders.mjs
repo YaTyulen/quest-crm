@@ -46,7 +46,7 @@ async function main() {
   const toNotify = [];
   for (const docSnap of snap.docs) {
     const data = docSnap.data();
-    if (data.role === 'admin') continue;
+    // if (data.role === 'admin') continue;
     if (!data.vkId) continue;
 
     const availability = data.availability ?? {};

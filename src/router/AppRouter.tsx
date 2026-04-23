@@ -6,6 +6,7 @@ import { ClientsList } from '../pages/ClientsList/ClientsList';
 import { ScheduleGrid } from '../pages/Schedule/ScheduleGrid';
 import { MySchedule } from '../components/MySchedule/MySchedule';
 import UsersPage from '../pages/UsersPage/UsersPage';
+import EditPage from '../pages/EditPage/EditPage';
 import PrivateRoute from './PrivateRoute';
 import { BASE_PATH } from '../constants';
 
@@ -40,6 +41,14 @@ const AppRouter = () => {
         }
       />
       <Route path={`/${BASE_PATH}/create`} element={<FormPage />} />
+      <Route
+        path={`/${BASE_PATH}/edit/:id`}
+        element={
+          <PrivateRoute allowedRoles={['admin']}>
+            <EditPage />
+          </PrivateRoute>
+        }
+      />
       <Route path={`/${BASE_PATH}/timetable`} element={<ScheduleGrid />} />
       <Route path={`/${BASE_PATH}/myschedule`} element={<MySchedule />} />
     </Routes>
