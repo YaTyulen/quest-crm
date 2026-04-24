@@ -13,7 +13,6 @@ import { recordClientSlice } from '../../store/slices';
 import { useDispatch } from 'react-redux';
 import { getAllUsers } from '../../utils/userUtils';
 import type { UserProfile } from '../../types/roles';
-import { timeSlots } from '../../utils/scheduleUtils';
 
 const UPCOMING_HIDDEN = ['count', 'piece', 'isCash'];
 
