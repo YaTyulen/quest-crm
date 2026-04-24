@@ -65,8 +65,11 @@ async function main() {
   let skipped = 0;
 
   for (const game of tomorrowGames) {
-    const { quest, time, admin: operatorName, actor: actorName } = game;
-    const timeStr = time ? ` в ${time}` : '';
+    const { quest, data: gameData, admin: operatorName, actor: actorName } = game;
+    const gameDate = new Date(Number(gameData) + TOMSK_OFFSET_MS);
+    const hours = String(gameDate.getUTCHours()).padStart(2, '0');
+    const minutes = String(gameDate.getUTCMinutes()).padStart(2, '0');
+    const timeStr = ` в ${hours}:${minutes}`;
 
     // Notify operator
     if (!operatorName) {
@@ -80,7 +83,7 @@ async function main() {
         console.warn(`[${quest}] operator "${operatorName}" has no vkId — skipping`);
         skipped++;
       } else {
-        const actorLine = actorName ? `Ваш актёр: ${actorName}.` : 'Актёр пока не назначен.';
+        const actorLine = actorName ? `Актёр: ${actorName}.` : 'Актёр пока не назначен.';
         const message =
           `Привет, ${operatorName}! Напоминаем: завтра у тебя игра.\n` +
           `Квест: ${quest}${timeStr}.\n` +
@@ -107,7 +110,7 @@ async function main() {
         console.warn(`[${quest}] actor "${actorName}" has no vkId — skipping`);
         skipped++;
       } else {
-        const operatorLine = operatorName ? `Твой оператор: ${operatorName}.` : 'Оператор пока не назначен.';
+        const operatorLine = operatorName ? `Админ: ${operatorName}.` : 'Оператор пока не назначен.';
         const message =
           `Привет, ${actorName}! Напоминаем: завтра у тебя игра.\n` +
           `Квест: ${quest}${timeStr}.\n` +
