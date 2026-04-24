@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, type DocumentData } from 'firebase/firestore';
 import { Field } from '../../components/Field/Field';
 import { Button, Select } from '../../components/ui-kit';
 import type { IField } from '../../types/Field';
@@ -12,7 +12,6 @@ import { recordClientSlice } from '../../store/slices';
 import { useDispatch } from 'react-redux';
 import { getAllUsers } from '../../utils/userUtils';
 import type { UserProfile } from '../../types/roles';
-import { timeSlots } from '../../utils/scheduleUtils';
 import '../FormPage/FormPage.scss';
 
 const UPCOMING_HIDDEN = ['count', 'piece', 'isCash'];
@@ -85,7 +84,7 @@ const EditPage = () => {
   };
 
   const saveRecord = async () => {
-    await updateDoc(doc(db, 'clients', id!), recordClient as Record<string, unknown>);
+    await updateDoc(doc(db, 'clients', id!), recordClient as DocumentData);
     dispatch(clearRecordClient());
     navigate(`/${BASE_PATH}/clients`);
   };
