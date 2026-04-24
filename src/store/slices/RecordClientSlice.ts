@@ -12,7 +12,6 @@ const defaultRecordClient: IRecord = {
     note: '',
     admin: 'Не указан',
     actor: 'Не указан',
-    time: '10:00',
   }
 
 interface RecordClientState {

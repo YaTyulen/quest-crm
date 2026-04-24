@@ -26,7 +26,7 @@ const FormPage = () => {
 
   useEffect(() => {
     getAllUsers().then(setUsers);
-  }, []);
+  }, []);  
 
   const isUpcoming = recordClient.data > Date.now();
 
