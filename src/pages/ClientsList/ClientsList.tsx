@@ -9,7 +9,7 @@ import { BASE_PATH } from '../../constants';
 export const ClientsList = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'upcoming' | 'completed'>('upcoming');
-  const { upcoming, completed, loading } = useClientsData();
+  const { upcoming, completed, loading, deleteClient } = useClientsData();
 
   return (
     <div className="clients-page">
@@ -36,6 +36,7 @@ export const ClientsList = () => {
         <TableClients
           clients={activeTab === 'upcoming' ? upcoming : completed}
           variant={activeTab}
+          onDelete={deleteClient}
         />
       )}
     </div>

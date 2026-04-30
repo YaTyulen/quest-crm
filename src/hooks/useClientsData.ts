@@ -1,4 +1,4 @@
-import { collection, getDocs } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import type { Client } from "../types/client";
 import { useEffect, useState } from "react";
@@ -39,5 +39,11 @@ export const useClientsData = () => {
         fetchClients();
     }, []);
 
-    return { upcoming, completed, loading };
+    const deleteClient = async (clientId: string) => {
+        await deleteDoc(doc(db, 'clients', clientId));
+        setUpcoming((prev) => prev.filter((client) => client.id !== clientId));
+        setCompleted((prev) => prev.filter((client) => client.id !== clientId));
+    };
+
+    return { upcoming, completed, loading, deleteClient };
 };

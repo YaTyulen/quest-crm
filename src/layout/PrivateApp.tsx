@@ -1,26 +1,8 @@
-import { useEffect } from "react";
 import { Sidebar } from "../components"
 import AppRouter from "../router/AppRouter"
-import { useNavigate } from "react-router-dom";
-import { BASE_PATH } from "../constants";
 
 
 const PrivateApp = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const entry = performance.getEntriesByType('navigation')[0];
-
-    if (
-      entry &&
-      'type' in entry &&
-      entry.type === 'reload'
-    ) {
-      navigate(`/${BASE_PATH}/home`, { replace: true });
-    }
-  }, []);
-
-
   return (
     <div className="private-layout">
         {/** Сайдбар и тип того, а в содержательной части - роутер */}

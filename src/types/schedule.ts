@@ -20,6 +20,7 @@ export interface UserSchedule {
   updatedAt: Timestamp | Date;
   isActive: boolean;
   role?: Role;
+  firstFilledAt?: { [date: string]: Timestamp | Date };
 }
 
 export interface AvailabilityInfo {

@@ -1,4 +1,3 @@
-<!-- public/404.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -6,15 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Перенаправление...</title>
   <script>
-    // Редирект для GitHub Pages SPA
-    const path = window.location.pathname;
-    const isRepoPage = path.includes('/quest-crm/');
-    
-    if (!isRepoPage && path !== '/') {
-      window.location.href = '/quest-crm/' + path;
-    } else if (path === '/' || path === '/quest-crm') {
-      window.location.href = '/quest-crm/';
-    }
+    (function () {
+      var repoBase = '/quest-crm/';
+      var redirectPath = window.location.pathname + window.location.search + window.location.hash;
+
+      sessionStorage.setItem('redirect', redirectPath);
+      window.location.replace(repoBase);
+    })();
   </script>
 </head>
 <body>
