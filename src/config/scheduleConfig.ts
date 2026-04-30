@@ -1,1 +1,1 @@
-export const LOCK_DELAY_HOURS = 0.02;
+export const LOCK_DELAY_HOURS = 2;
