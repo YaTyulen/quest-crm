@@ -278,6 +278,29 @@
   }
 }
 
+.actions-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 6px;
+  color: #b42318;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: #fee4e2;
+    color: #912018;
+  }
+}
+
 .cash-yes, .cash-no {
   font-weight: 600;
   display: flex;

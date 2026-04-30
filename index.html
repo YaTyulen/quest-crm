@@ -5,19 +5,20 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quest CRM</title>
+    <script>
+      (function () {
+        var redirect = sessionStorage.getItem('redirect');
+        if (!redirect) return;
+
+        sessionStorage.removeItem('redirect');
+        if (redirect !== window.location.pathname + window.location.search + window.location.hash) {
+          history.replaceState(null, '', redirect);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root" style="height: 100%;"></div>
     <script type="module" src="/src/main.tsx"></script>
-
-    <script>
-      (function() {
-        var redirect = sessionStorage.redirect;
-        delete sessionStorage.redirect;
-        if (redirect && redirect !== location.href) {
-          history.replaceState(null, null, redirect);
-        }
-      })();
-    </script>
   </body>
 </html>

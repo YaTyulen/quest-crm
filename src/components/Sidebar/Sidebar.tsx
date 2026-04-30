@@ -3,6 +3,8 @@ import ListSvg from '../../assets/list.svg'
 import ChartSvg from '../../assets/chart.svg'
 import LogoutSvg from '../../assets/logout.svg'
 import TimeTableSvg from '../../assets/timetable.svg';
+import UsersSvg from '../../assets/users.svg'
+import MySchedulesSvg from '../../assets/my-schedules.svg'
 
 import './Sidebar.scss';
 import { useNavigate } from 'react-router-dom';
@@ -34,14 +36,14 @@ export const Sidebar = () => {
                 <ListSvg/>
             </li>}
             {role === 'admin' && <li className='sidebar__item' title='Пользователи' onClick={() => navigate(`/${BASE_PATH}/users`)}>
-                <ListSvg/>
+                <UsersSvg/>
             </li>}
 
             <li className='sidebar__item' title='Расписание' onClick={() => navigate(`/${BASE_PATH}/timetable`)}>
                 <TimeTableSvg/>
             </li>
             <li className='sidebar__item' title='Моё Расписание' onClick={() => navigate(`/${BASE_PATH}/myschedule`)}>
-                <TimeTableSvg/>
+                <MySchedulesSvg/>
             </li>
             {role === 'admin' && <li className='sidebar__item' title='Аналитика' onClick={() => navigate(`/${BASE_PATH}/analytics`)}>
                 <ChartSvg/>

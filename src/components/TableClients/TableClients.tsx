@@ -10,9 +10,14 @@ import { BASE_PATH } from '../../constants';
 interface TableClientsProps {
   clients: Client[];
   variant: 'upcoming' | 'completed';
+  onDelete: (clientId: string) => Promise<void>;
 }
 
-export const TableClients: React.FC<TableClientsProps> = ({ clients, variant }) => {
+export const TableClients: React.FC<TableClientsProps> = ({
+  clients,
+  variant,
+  onDelete,
+}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { clearRecordClient } = recordClientSlice.actions;
@@ -23,6 +28,18 @@ export const TableClients: React.FC<TableClientsProps> = ({ clients, variant }) 
 
   const handleEdit = (id: string) => {
     navigate(`/${BASE_PATH}/edit/${id}`);
+  };
+
+  const handleDelete = async (id: string) => {
+    const confirmed = window.confirm('Удалить предстоящую игру? Это действие нельзя отменить.');
+    if (!confirmed) return;
+
+    try {
+      await onDelete(id);
+    } catch (error) {
+      console.error('Ошибка при удалении записи:', error);
+      window.alert('Не удалось удалить игру. Попробуйте еще раз.');
+    }
   };
 
   if (variant === 'upcoming') {
@@ -41,8 +58,18 @@ export const TableClients: React.FC<TableClientsProps> = ({ clients, variant }) 
           <tbody>
             {clients.map((client) => (
               <tr key={client.id}>
-                <td>
-                  <button className="edit-btn" onClick={() => handleEdit(client.id)}>✏</button>
+                <td className="actions-cell">
+                  <button className="edit-btn" onClick={() => handleEdit(client.id)}>
+                    ✎
+                  </button>
+                  <button
+                    className="delete-btn"
+                    onClick={() => void handleDelete(client.id)}
+                    aria-label="Удалить игру"
+                    title="Удалить игру"
+                  >
+                    ×
+                  </button>
                 </td>
                 <td data-label="Квест">
                   <span className="quest-badge">{client.quest}</span>
@@ -80,7 +107,9 @@ export const TableClients: React.FC<TableClientsProps> = ({ clients, variant }) 
           {clients.map((client) => (
             <tr key={client.id} className={!client.piece ? 'row--incomplete' : ''}>
               <td>
-                <button className="edit-btn" onClick={() => handleEdit(client.id)}>✏</button>
+                <button className="edit-btn" onClick={() => handleEdit(client.id)}>
+                  ✎
+                </button>
               </td>
               <td data-label="Имя">
                 <div className="client-name">{client.name}</div>
