@@ -7,6 +7,7 @@ export interface IRecord {
     piece: number;
     isCash: boolean;
     note: string;
+    agregator: string;
     admin?: string;
     actor?: string;
     time?: string;

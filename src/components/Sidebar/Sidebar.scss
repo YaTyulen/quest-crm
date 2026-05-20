@@ -19,6 +19,7 @@
     }
 
     &__item {
+      position: relative;
         padding: 5px;
         width: 24px;
         display: flex;
@@ -38,6 +39,17 @@
 
         & svg, & path {
             fill: $cBackgroundWhite;
+        }
+
+        &--baige::after {
+          content: '';
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background-color: red;
+          position: absolute;
+          top: 5px;
+          right: 5px;
         }
     }
 }

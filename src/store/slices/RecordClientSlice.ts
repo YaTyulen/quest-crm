@@ -5,6 +5,7 @@ const defaultRecordClient: IRecord = {
     name: '',
     phone: '',
     quest: 'Теле-ужас',
+    agregator: "Мир Квестов",
     data: Date.now(),
     count: 0,
     piece: 0,

@@ -12,8 +12,12 @@ import { useAuth } from '../../hooks/useAuth';
 import { signInSlice } from '../../store/slices';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import { BASE_PATH } from '../../constants';
+import { useEffect, useState } from 'react';
+import { getPendingRequests } from '../../utils/scheduleChangeRequests';
+import type { ScheduleChangeRequest } from '../../types/scheduleChangeRequest';
 
 export const Sidebar = () => {
+    const [changeRequests, setChangeRequests] = useState<ScheduleChangeRequest[]>([]);
     const navigate = useNavigate();
     const { signOut } = useAuth();
     const { setIsAuth } = signInSlice.actions;
@@ -26,10 +30,17 @@ export const Sidebar = () => {
         dispatch(setIsAuth(false))
     }
 
+    useEffect(() => {
+        if (role !== 'admin') return;
+        getPendingRequests()
+          .then(setChangeRequests)
+          .catch(console.error);
+      }, [role]);
+
   return (
     <div className="sidebar">
         <ul className='sidebar__links'>
-            <li className='sidebar__item' title='Главная' onClick={() => navigate(`/${BASE_PATH}/home`)}>
+            <li className={changeRequests.length ? 'sidebar__item sidebar__item--baige' : 'sidebar__item'} title='Главная' onClick={() => navigate(`/${BASE_PATH}/home`)}>
                 <HomeSvg />
             </li>
             {role === 'admin' && <li className='sidebar__item' title='Список игр' onClick={() => navigate(`/${BASE_PATH}/clients`)}>
