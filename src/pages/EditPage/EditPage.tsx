@@ -38,6 +38,7 @@ const EditPage = () => {
         name: d.name ?? '',
         phone: d.phone ?? '',
         quest: d.quest ?? 'Теле-ужас',
+        agregator: d.agregator ?? "Мир Квестов",
         data: Number(d.data),
         count: Number(d.count) || 0,
         piece: Number(d.piece) || 0,
