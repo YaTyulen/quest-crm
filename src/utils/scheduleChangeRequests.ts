@@ -21,6 +21,32 @@ interface SubmitParams {
   currentAvailability: { [time: string]: boolean };
 }
 
+async function triggerScheduleChangeAlert(requestId: string): Promise<void> {
+  const token = import.meta.env.VITE_GITHUB_TOKEN;
+  if (!token) return;
+
+  const res = await fetch(
+    'https://api.github.com/repos/YaTyulen/quest-crm/actions/workflows/schedule-change-request-alert.yml/dispatches',
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ref: 'main',
+        inputs: { request_id: requestId },
+      }),
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error(`Failed to dispatch admin alert workflow: ${res.status}`);
+  }
+}
+
 export async function submitChangeRequest(params: SubmitParams): Promise<string> {
   const ref = await addDoc(collection(db, COLLECTION), {
     ...params,
@@ -28,6 +54,11 @@ export async function submitChangeRequest(params: SubmitParams): Promise<string>
     createdAt: serverTimestamp(),
   });
   await updateDoc(ref, { id: ref.id });
+  try {
+    await triggerScheduleChangeAlert(ref.id);
+  } catch (error) {
+    console.error('Failed to trigger schedule change alert:', error);
+  }
   return ref.id;
 }
 

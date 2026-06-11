@@ -18,6 +18,7 @@ const docToProfile = (data: Record<string, unknown>, uid: string): UserProfile =
   email: (data.userEmail as string) ?? '',
   displayName: (data.userName as string) ?? '',
   role: (data.role as Role) ?? 'operator',
+  isActive: data.isActive !== false,
   vkId: (data.vkId as string) || undefined,
   createdAt: data.updatedAt as UserProfile['createdAt'],
 });
@@ -39,6 +40,10 @@ export const updateUserRole = async (uid: string, role: Role): Promise<void> => 
 
 export const updateUserVkId = async (uid: string, vkId: string): Promise<void> => {
   await updateDoc(doc(db, COLLECTION, uid), { vkId: vkId.trim() || null });
+};
+
+export const updateUserActive = async (uid: string, isActive: boolean): Promise<void> => {
+  await updateDoc(doc(db, COLLECTION, uid), { isActive });
 };
 
 export const createUserWithRole = async (

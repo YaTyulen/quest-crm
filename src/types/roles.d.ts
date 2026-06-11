@@ -5,6 +5,7 @@ export interface UserProfile {
   email: string;
   displayName: string;
   role: Role;
+  isActive: boolean;
   vkId?: string;
   createdAt: import('firebase/firestore').Timestamp;
 }

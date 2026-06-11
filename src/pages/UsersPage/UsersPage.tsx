@@ -1,6 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Button, TextInput, PasswordInput, Select } from '../../components/ui-kit';
-import { getAllUsers, updateUserRole, createUserWithRole, updateUserVkId } from '../../utils/userUtils';
+import {
+  getAllUsers,
+  updateUserRole,
+  createUserWithRole,
+  updateUserVkId,
+  updateUserActive,
+} from '../../utils/userUtils';
+import {
+  getNotificationSettings,
+  updateScheduleChangeAdminUid,
+} from '../../utils/appSettings';
 import type { Role, UserProfile } from '../../types/roles';
 import './UsersPage.scss';
 
@@ -25,25 +35,29 @@ const UsersPage = () => {
 
   const [vkIdEdits, setVkIdEdits] = useState<Record<string, string>>({});
   const [savingVkId, setSavingVkId] = useState<string | null>(null);
+  const [savingActive, setSavingActive] = useState<string | null>(null);
 
   const [sendingReminders, setSendingReminders] = useState(false);
   const [reminderStatus, setReminderStatus] = useState<'success' | 'error' | null>(null);
 
   const [sendingGameReminders, setSendingGameReminders] = useState(false);
   const [gameReminderStatus, setGameReminderStatus] = useState<'success' | 'error' | null>(null);
+  const [selectedScheduleAdminUid, setSelectedScheduleAdminUid] = useState('');
+  const [savingScheduleAdmin, setSavingScheduleAdmin] = useState(false);
 
   useEffect(() => {
-    getAllUsers()
-      .then(data => {
+    Promise.all([getAllUsers(), getNotificationSettings()])
+      .then(([data, settings]) => {
         setUsers(data);
-        setVkIdEdits(Object.fromEntries(data.map(u => [u.uid, u.vkId ?? ''])));
+        setVkIdEdits(Object.fromEntries(data.map((u) => [u.uid, u.vkId ?? ''])));
+        setSelectedScheduleAdminUid(settings.scheduleChangeAdminUid ?? '');
       })
       .finally(() => setLoading(false));
   }, []);
 
   const handleRoleChange = async (uid: string, role: Role) => {
     await updateUserRole(uid, role);
-    setUsers(prev => prev.map(u => u.uid === uid ? { ...u, role } : u));
+    setUsers((prev) => prev.map((u) => (u.uid === uid ? { ...u, role } : u)));
   };
 
   const handleVkIdSave = async (uid: string) => {
@@ -51,9 +65,28 @@ const UsersPage = () => {
     try {
       const vkId = vkIdEdits[uid] ?? '';
       await updateUserVkId(uid, vkId);
-      setUsers(prev => prev.map(u => u.uid === uid ? { ...u, vkId: vkId || undefined } : u));
+      setUsers((prev) => prev.map((u) => (u.uid === uid ? { ...u, vkId: vkId || undefined } : u)));
     } finally {
       setSavingVkId(null);
+    }
+  };
+
+  const handleActiveToggle = async (uid: string, isActive: boolean) => {
+    setSavingActive(uid);
+    try {
+      await updateUserActive(uid, isActive);
+      setUsers((prev) => prev.map((u) => (u.uid === uid ? { ...u, isActive } : u)));
+    } finally {
+      setSavingActive(null);
+    }
+  };
+
+  const handleScheduleAdminSave = async () => {
+    setSavingScheduleAdmin(true);
+    try {
+      await updateScheduleChangeAdminUid(selectedScheduleAdminUid || null);
+    } finally {
+      setSavingScheduleAdmin(false);
     }
   };
 
@@ -118,7 +151,7 @@ const UsersPage = () => {
       await createUserWithRole(newEmail, newPassword, newDisplayName, newRole);
       const updated = await getAllUsers();
       setUsers(updated);
-      setVkIdEdits(prev => {
+      setVkIdEdits((prev) => {
         const next = { ...prev };
         for (const u of updated) {
           if (!(u.uid in next)) next[u.uid] = u.vkId ?? '';
@@ -136,107 +169,160 @@ const UsersPage = () => {
     }
   };
 
+  const adminOptions = users.filter((user) => user.role === 'admin' && user.isActive);
+
   return (
-    <div className='users-page'>
-      <section className='users-page__section'>
-        <h2 className='users-page__title'>VK-уведомления</h2>
-        <div className='users-page__form'>
-          <Button color='dark' onClick={handleSendReminders} disabled={sendingReminders}>
+    <div className="users-page">
+      <section className="users-page__section">
+        <h2 className="users-page__title">VK-уведомления</h2>
+        <div className="users-page__form">
+          <div className="users-page__subsection">
+            <h3 className="users-page__subtitle">Администратор для запросов на изменение расписания</h3>
+            <label className="users-page__inline-label">
+              Получатель уведомлений
+              <select
+                className="users-page__role-select"
+                value={selectedScheduleAdminUid}
+                onChange={(e) => setSelectedScheduleAdminUid(e.target.value)}
+              >
+                <option value="">Не выбран</option>
+                {adminOptions.map((admin) => (
+                  <option key={admin.uid} value={admin.uid}>
+                    {admin.displayName || admin.email}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <Button color="dark" onClick={handleScheduleAdminSave} disabled={savingScheduleAdmin}>
+              {savingScheduleAdmin ? 'Сохраняем...' : 'Сохранить получателя'}
+            </Button>
+          </div>
+
+          <Button color="dark" onClick={handleSendReminders} disabled={sendingReminders}>
             {sendingReminders ? 'Запускаем...' : 'Отправить напоминания сейчас'}
           </Button>
           {reminderStatus === 'success' && (
-            <div className='users-page__success'>Рассылка запущена — сообщения придут в течение минуты</div>
+            <div className="users-page__success">
+              Рассылка запущена, сообщения придут в течение минуты
+            </div>
           )}
           {reminderStatus === 'error' && (
-            <div className='users-page__error'>Ошибка запуска — проверь VITE_GITHUB_TOKEN в .env</div>
+            <div className="users-page__error">
+              Ошибка запуска, проверь `VITE_GITHUB_TOKEN` в `.env`
+            </div>
           )}
-          <Button color='dark' onClick={handleSendGameReminders} disabled={sendingGameReminders}>
+          <Button color="dark" onClick={handleSendGameReminders} disabled={sendingGameReminders}>
             {sendingGameReminders ? 'Запускаем...' : 'Напомнить об играх завтра'}
           </Button>
           {gameReminderStatus === 'success' && (
-            <div className='users-page__success'>Рассылка запущена — сообщения придут в течение минуты</div>
+            <div className="users-page__success">
+              Рассылка запущена, сообщения придут в течение минуты
+            </div>
           )}
           {gameReminderStatus === 'error' && (
-            <div className='users-page__error'>Ошибка запуска — проверь VITE_GITHUB_TOKEN в .env</div>
+            <div className="users-page__error">
+              Ошибка запуска, проверь `VITE_GITHUB_TOKEN` в `.env`
+            </div>
           )}
         </div>
       </section>
 
-      <section className='users-page__section'>
-        <h2 className='users-page__title'>Создать пользователя</h2>
-        <div className='users-page__form'>
+      <section className="users-page__section">
+        <h2 className="users-page__title">Создать пользователя</h2>
+        <div className="users-page__form">
           <TextInput
-            label='Email'
+            label="Email"
             value={newEmail}
-            onChange={e => setNewEmail(e.target.value)}
-            autoComplete='off'
+            onChange={(e) => setNewEmail(e.target.value)}
+            autoComplete="off"
           />
           <TextInput
-            label='Имя'
+            label="Имя"
             value={newDisplayName}
-            onChange={e => setNewDisplayName(e.target.value)}
-            autoComplete='off'
+            onChange={(e) => setNewDisplayName(e.target.value)}
+            autoComplete="off"
           />
           <PasswordInput
-            label='Пароль'
+            label="Пароль"
             value={newPassword}
-            onChange={e => setNewPassword(e.target.value)}
-            autoComplete='new-password'
+            onChange={(e) => setNewPassword(e.target.value)}
+            autoComplete="new-password"
           />
           <Select
-            label='Роль'
+            label="Роль"
             value={newRole}
             options={ROLES}
-            onChange={e => setNewRole(e.target.value as Role)}
+            onChange={(e) => setNewRole(e.target.value as Role)}
           />
-          {error && <div className='users-page__error'>{error}</div>}
-          <Button color='dark' onClick={handleCreateUser}>
+          {error && <div className="users-page__error">{error}</div>}
+          <Button color="dark" onClick={handleCreateUser}>
             {creating ? 'Создание...' : 'Создать'}
           </Button>
         </div>
       </section>
 
-      <section className='users-page__section'>
-        <h2 className='users-page__title'>Пользователи</h2>
+      <section className="users-page__section">
+        <h2 className="users-page__title">Пользователи</h2>
         {loading ? (
           <p>Загрузка...</p>
         ) : (
-          <table className='users-page__table'>
+          <table className="users-page__table">
             <thead>
               <tr>
                 <th>Имя</th>
                 <th>Email</th>
                 <th>Роль</th>
+                <th>Активность</th>
                 <th>VK ID</th>
               </tr>
             </thead>
             <tbody>
-              {users.map(user => (
+              {users.map((user) => (
                 <tr key={user.uid}>
                   <td>{user.displayName}</td>
                   <td>{user.email}</td>
                   <td>
                     <select
-                      className='users-page__role-select'
+                      className="users-page__role-select"
                       value={user.role}
-                      onChange={e => handleRoleChange(user.uid, e.target.value as Role)}
+                      onChange={(e) => handleRoleChange(user.uid, e.target.value as Role)}
                     >
-                      {ROLES.map(r => (
-                        <option key={r} value={r}>{ROLE_LABELS[r]}</option>
+                      {ROLES.map((r) => (
+                        <option key={r} value={r}>
+                          {ROLE_LABELS[r]}
+                        </option>
                       ))}
                     </select>
                   </td>
                   <td>
-                    <div className='users-page__vk-cell'>
+                    <button
+                      className={`users-page__toggle ${user.isActive ? 'users-page__toggle--active' : ''}`}
+                      onClick={() => handleActiveToggle(user.uid, !user.isActive)}
+                      disabled={savingActive === user.uid}
+                    >
+                      <span className="users-page__toggle-thumb" />
+                      <span className="users-page__toggle-label">
+                        {savingActive === user.uid
+                          ? 'Сохраняем...'
+                          : user.isActive
+                          ? 'Активен'
+                          : 'Не активен'}
+                      </span>
+                    </button>
+                  </td>
+                  <td>
+                    <div className="users-page__vk-cell">
                       <input
-                        className='users-page__vk-input'
-                        type='text'
-                        placeholder='123456789'
+                        className="users-page__vk-input"
+                        type="text"
+                        placeholder="123456789"
                         value={vkIdEdits[user.uid] ?? ''}
-                        onChange={e => setVkIdEdits(prev => ({ ...prev, [user.uid]: e.target.value }))}
+                        onChange={(e) =>
+                          setVkIdEdits((prev) => ({ ...prev, [user.uid]: e.target.value }))
+                        }
                       />
                       <button
-                        className='users-page__vk-save'
+                        className="users-page__vk-save"
                         onClick={() => handleVkIdSave(user.uid)}
                         disabled={savingVkId === user.uid}
                       >

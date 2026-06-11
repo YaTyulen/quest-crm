@@ -29,6 +29,30 @@ $cPrimary: #090dff;
     max-width: 400px;
   }
 
+  &__subsection {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 12px;
+    background: #f8faff;
+    border: 1px solid #dbe3ff;
+  }
+
+  &__subtitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: #222;
+  }
+
+  &__inline-label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+    color: #555;
+  }
+
   &__error {
     color: #e33;
     font-size: 14px;
@@ -120,5 +144,49 @@ $cPrimary: #090dff;
     &:hover:not(:disabled) {
       opacity: 0.85;
     }
+  }
+
+  &__toggle {
+    border: none;
+    background: #f2f4f7;
+    border-radius: 999px;
+    padding: 4px 10px 4px 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: background 0.2s ease, opacity 0.2s ease;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    &--active {
+      background: #dff7e7;
+
+      .users-page__toggle-thumb {
+        background: #1a9e2e;
+      }
+
+      .users-page__toggle-label {
+        color: #166534;
+      }
+    }
+  }
+
+  &__toggle-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #98a2b3;
+    transition: background 0.2s ease;
+  }
+
+  &__toggle-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #475467;
+    white-space: nowrap;
   }
 }

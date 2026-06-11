@@ -104,7 +104,7 @@ async function main() {
   const userMap = new Map();
   for (const doc of schedulesSnap.docs) {
     const d = doc.data();
-    if (d.userName) {
+    if (d.userName && d.isActive !== false) {
       userMap.set(d.userName, { userName: d.userName, vkId: d.vkId || null });
     }
   }
