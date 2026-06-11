@@ -22,6 +22,7 @@ const ROLE_LABELS: Record<Role, string> = {
   operator: 'Оператор',
 };
 
+
 const UsersPage = () => {
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
