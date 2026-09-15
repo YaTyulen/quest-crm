@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { recordClientSlice } from '../../store/slices';
 import type { Client } from '../../types/client';
 import { BASE_PATH } from '../../constants';
+import { openGameInGoogleCalendar } from '../../utils/calendar';
+import CalendarSvg from '../../assets/calendar.svg';
 
 interface TableClientsProps {
   clients: Client[];
@@ -70,6 +72,15 @@ export const TableClients: React.FC<TableClientsProps> = ({
                   >
                     ×
                   </button>
+                  <button
+                    type="button"
+                    className="calendar-btn"
+                    onClick={() => openGameInGoogleCalendar(client)}
+                    aria-label="Добавить игру в Google Календарь"
+                    title="Добавить в Google Календарь"
+                  >
+                    <CalendarSvg aria-hidden="true" />
+                  </button>
                 </td>
                 <td data-label="Квест">
                   <span className="quest-badge">{client.quest}</span>
@@ -77,7 +88,7 @@ export const TableClients: React.FC<TableClientsProps> = ({
                 <td data-label="Дата" className="date-cell">
                   {formatDate(Number(client.data) / 1000)}
                 </td>
-                <td data-label="Оператор">{client.admin || '—'}</td>
+                <td className='admin' data-label="Оператор">{client.admin || '—'}</td>
                 <td data-label="Актёр">{client.actor || '—'}</td>
               </tr>
             ))}
