@@ -1,171 +1,35 @@
-/* src/components/ScheduleGrid/ScheduleGrid.css */
-.schedule-container {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.date-selector {
-  display: flex;
-  gap: 10px;
-  margin: 20px 0;
-  overflow-x: auto;
-  padding: 10px 0;
-}
-
-.date-btn {
-  padding: 10px 15px;
-  border: 1px solid #ddd;
-  background: white;
-  border-radius: 8px;
-  cursor: pointer;
-  min-width: 120px;
-  white-space: nowrap;
-  transition: all 0.3s;
-}
-
-.date-btn:hover {
-  background: #f0f0f0;
-}
-
-.date-btn.active {
-  background: #007bff;
-  color: white;
-  border-color: #007bff;
-}
-
-.time-slots {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.time-slot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s;
-  background: white;
-}
-
-.time-slot:hover {
-  background: #f9f9f9;
-  transform: translateX(5px);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.time-slot.understaffed {
-  border-color: #f5c6cb;
-  background: #fff5f5;
-
-  &:hover {
-    background: #fde8e8;
-  }
-}
-
-.time-label {
-  font-weight: bold;
-  font-size: 1.1em;
-}
-
-.time-users {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.users-count {
-  padding: 5px 15px;
-  border-radius: 20px;
-  font-size: 0.9em;
-  font-weight: 500;
-}
-
-.users-count.has-users {
-  background: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
-}
-
-.users-count.no-users {
-  background: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-}
-
-.cannot-work-indicator {
-  position: relative;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 0.85em;
-  font-weight: 600;
-  background: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-  cursor: default;
-  user-select: none;
-
-  &::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: calc(100% + 6px);
-    right: 0;
-    background: #333;
-    color: #fff;
-    padding: 5px 9px;
-    border-radius: 6px;
-    font-size: 0.82em;
-    font-weight: 400;
-    white-space: nowrap;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.15s;
-    z-index: 10;
-  }
-
-  &:hover::after {
-    opacity: 1;
-  }
-}
-
-.not-filled-banner {
-  margin: 12px 0;
-  padding: 10px 14px;
-  background: #fff3cd;
-  border-left: 4px solid #ffc107;
-  border-radius: 6px;
-  font-size: 0.88rem;
-  color: #856404;
-
-  &__title {
-    font-weight: 600;
-    margin-right: 6px;
-  }
-}
-
-@media (max-width: 600px) {
-  .schedule-container {
-    margin-bottom: 70px;
-  }
-
-  .time-slot {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-
-    &:hover {
-      transform: none;
-    }
-  }
-
-  .time-users {
-    width: 100%;
-    justify-content: flex-start;
+.schedule-grid {
+  &__heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
+  &__heading h2::first-letter { text-transform: uppercase; }
+  &__refresh { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border: 1px solid #e5e1ef; border-radius: 12px; background: #f6f4fa; color: #655477; font-size: 14px; }
+  &__refresh span { font-size: 20px; line-height: 1; }
+  &__refresh:hover:not(:disabled) { background: #eee8f7; }
+  &__missing { padding: 16px 20px; margin-bottom: 20px !important; border: 1px solid #f3e3c2; border-radius: 16px; background: #fff9ed; color: #92713b; overflow-wrap: anywhere; font-size: 14px; line-height: 1.7; }
+  &__slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+  &__slot { display: flex; flex-direction: column; gap: 12px; padding: 20px; border: 1px solid #e8e4f0; border-radius: 20px; background: linear-gradient(125deg, #f8f7fc, #f3f1f8); min-width: 0; }
+  &__slot--available { background: linear-gradient(125deg, #f0fcf7, #ecfaf4); border-color: #d2f3e5; }
+  &__slot-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  &__slot h3 { margin: 0; font-size: 26px; letter-spacing: -.7px; }
+  &__coverage { align-self: flex-start; padding: 5px 8px; border-radius: 8px; background: #fff1d6; color: #724f19; font-size: 13px; }
+  &__coverage--enough { background: #d8f3e7; color: #21654d; }
+  &__role { display: grid; gap: 4px; font-size: 14px; }
+  &__role > strong span { margin-left: 4px; color: #57536c; font-weight: 500; }
+  &__names { display: grid; gap: 4px; min-width: 0; overflow-wrap: anywhere; color: #21654d; }
+  &__empty { color: #625d74; font-size: 13px; }
+  &__personal { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 8px; margin-top: auto; padding: 10px; min-height: 44px; border: 1px solid #dcd5e6; border-radius: 12px; background: #fff; color: #504460; text-align: left; font-size: 13px; }
+  &__personal:hover:not(:disabled) { border-color: currentColor; cursor: pointer; }
+  &__personal--yes { background: #dbf5e9; border-color: #badfcd; color: #185d44; }
+  &__personal--no { background: #ffe8ec; border-color: #edc2cc; color: #892e43; }
+  &__tooltip { position: relative; flex-shrink: 0; }
+  &__unavailable { min-width: 36px; min-height: 36px; padding: 6px 8px; border: 1px solid #ffd9df; border-radius: 50%; background: #ffe8ec; color: #ce344b; font-weight: 600; font-size: 13px; }
+  &__tooltip-content { position: absolute; z-index: 10; right: 0; bottom: calc(100% + 8px); background: #353040; color: white; border-radius: 12px; padding: 12px 14px; width: max-content; max-width: min(230px, 65vw); font-size: 13px; line-height: 1.6; box-shadow: 0 8px 24px #20192826; visibility: hidden; opacity: 0; pointer-events: none; overflow-wrap: anywhere; }
+  &__tooltip--open &__tooltip-content { visibility: visible; opacity: 1; pointer-events: auto; }
+  @media (hover: hover) { &__tooltip:hover &__tooltip-content { visibility: visible; opacity: 1; pointer-events: auto; } }
+  &__tooltip::before { content: ''; position: absolute; bottom: 100%; left: 0; right: 0; height: 10px; }
+  @media (max-width: 600px) {
+    &__slots { grid-template-columns: 1fr; }
+    &__slot { padding: 18px; }
+    &__heading { align-items: flex-start; }
+    &__missing { padding: 14px; font-size: 13px; }
   }
 }

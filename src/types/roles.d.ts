@@ -1,11 +1,12 @@
 export type Role = 'admin' | 'actor' | 'operator';
-
+export type SystemRole = 'OWNER' | 'ADMIN' | 'USER';
+export type BusinessRole = 'OPERATOR' | 'ACTOR';
 export interface UserProfile {
-  uid: string;
+  id: number;
   email: string;
-  displayName: string;
-  role: Role;
+  name: string;
+  systemRole: SystemRole;
+  businessRoles: BusinessRole[];
+  createdAt: string;
   isActive: boolean;
-  vkId?: string;
-  createdAt: import('firebase/firestore').Timestamp;
 }

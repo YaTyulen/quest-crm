@@ -1,344 +1,109 @@
 import { useEffect, useState } from 'react';
-import { Button, TextInput, PasswordInput, Select } from '../../components/ui-kit';
-import {
-  getAllUsers,
-  updateUserRole,
-  createUserWithRole,
-  updateUserVkId,
-  updateUserActive,
-} from '../../utils/userUtils';
-import {
-  getNotificationSettings,
-  updateScheduleChangeAdminUid,
-} from '../../utils/appSettings';
-import type { Role, UserProfile } from '../../types/roles';
+import { getUsers, createUser, setSystemRole, setUserActivity } from '../../api/users';
+import { useAuth } from '../../hooks/useAuth';
+import { systemRoleLabels } from '../../utils/permissions';
+import { getMe } from '../../api/auth';
+import { useAppDispatch } from '../../hooks/reduxHooks';
+import { signInSlice } from '../../store/slices';
+import type { BusinessRole, SystemRole, UserProfile } from '../../types/roles';
 import './UsersPage.scss';
+import { UserQuestsDialog } from './UserQuestsDialog';
 
-const ROLES: Role[] = ['admin', 'actor', 'operator'];
-
-const ROLE_LABELS: Record<Role, string> = {
-  admin: 'Администратор',
-  actor: 'Актёр',
-  operator: 'Оператор',
-};
-
-
+const labels: Record<BusinessRole, string> = { OPERATOR: 'Оператор', ACTOR: 'Актёр' };
 const UsersPage = () => {
+  const { user: currentUser } = useAuth();
+  const isOwner = currentUser?.systemRole === 'OWNER';
   const [users, setUsers] = useState<UserProfile[]>([]);
+  const [questUser, setQuestUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [creating, setCreating] = useState(false);
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const [newEmail, setNewEmail] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [newDisplayName, setNewDisplayName] = useState('');
-  const [newRole, setNewRole] = useState<Role>('operator');
-
-  const [vkIdEdits, setVkIdEdits] = useState<Record<string, string>>({});
-  const [savingVkId, setSavingVkId] = useState<string | null>(null);
-  const [savingActive, setSavingActive] = useState<string | null>(null);
-
-  const [sendingReminders, setSendingReminders] = useState(false);
-  const [reminderStatus, setReminderStatus] = useState<'success' | 'error' | null>(null);
-
-  const [sendingGameReminders, setSendingGameReminders] = useState(false);
-  const [gameReminderStatus, setGameReminderStatus] = useState<'success' | 'error' | null>(null);
-  const [selectedScheduleAdminUid, setSelectedScheduleAdminUid] = useState('');
-  const [savingScheduleAdmin, setSavingScheduleAdmin] = useState(false);
-
+  const [name, setName] = useState('');
+  const [showCreate, setShowCreate] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [systemRole, setRole] = useState<SystemRole>('USER');
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    Promise.all([getAllUsers(), getNotificationSettings()])
-      .then(([data, settings]) => {
-        setUsers(data);
-        setVkIdEdits(Object.fromEntries(data.map((u) => [u.uid, u.vkId ?? ''])));
-        setSelectedScheduleAdminUid(settings.scheduleChangeAdminUid ?? '');
-      })
-      .finally(() => setLoading(false));
+    let active = true;
+    setLoading(true); setError(null);
+    getUsers().then(data => { if (active) setUsers(data); })
+      .catch(reason => { if (active) setError(reason instanceof Error ? reason.message : 'Не удалось загрузить сотрудников'); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
   }, []);
-
-  const handleRoleChange = async (uid: string, role: Role) => {
-    await updateUserRole(uid, role);
-    setUsers((prev) => prev.map((u) => (u.uid === uid ? { ...u, role } : u)));
-  };
-
-  const handleVkIdSave = async (uid: string) => {
-    setSavingVkId(uid);
+  const mutate = async (operation: () => Promise<unknown>) => {
+    if (busy) return;
+    setBusy(true); setError(null);
     try {
-      const vkId = vkIdEdits[uid] ?? '';
-      await updateUserVkId(uid, vkId);
-      setUsers((prev) => prev.map((u) => (u.uid === uid ? { ...u, vkId: vkId || undefined } : u)));
-    } finally {
-      setSavingVkId(null);
-    }
+      await operation();
+      setUsers(await getUsers());
+      dispatch(signInSlice.actions.setUser(await getMe()));
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : 'Не удалось сохранить изменения');
+    } finally { setBusy(false); }
   };
-
-  const handleActiveToggle = async (uid: string, isActive: boolean) => {
-    setSavingActive(uid);
-    try {
-      await updateUserActive(uid, isActive);
-      setUsers((prev) => prev.map((u) => (u.uid === uid ? { ...u, isActive } : u)));
-    } finally {
-      setSavingActive(null);
-    }
+  const handleCreate = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (busy) return;
+    if (!name.trim()) { setError('Введите имя сотрудника.'); return; }
+    await mutate(async () => {
+      await createUser({ name: name.trim(), email: email.trim(), password, systemRole: isOwner ? systemRole : 'USER' });
+      setName(''); setEmail(''); setPassword(''); setRole('USER');
+      setShowCreate(false);
+    });
   };
-
-  const handleScheduleAdminSave = async () => {
-    setSavingScheduleAdmin(true);
-    try {
-      await updateScheduleChangeAdminUid(selectedScheduleAdminUid || null);
-    } finally {
-      setSavingScheduleAdmin(false);
-    }
-  };
-
-  const handleSendReminders = async () => {
-    setSendingReminders(true);
-    setReminderStatus(null);
-    try {
-      const res = await fetch(
-        'https://api.github.com/repos/YaTyulen/quest-crm/actions/workflows/weekly-reminder.yml/dispatches',
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_GITHUB_TOKEN}`,
-            Accept: 'application/vnd.github+json',
-            'X-GitHub-Api-Version': '2022-11-28',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ ref: 'main' }),
-        }
-      );
-      setReminderStatus(res.status === 204 ? 'success' : 'error');
-    } catch {
-      setReminderStatus('error');
-    } finally {
-      setSendingReminders(false);
-    }
-  };
-
-  const handleSendGameReminders = async () => {
-    setSendingGameReminders(true);
-    setGameReminderStatus(null);
-    try {
-      const res = await fetch(
-        'https://api.github.com/repos/YaTyulen/quest-crm/actions/workflows/game-reminders.yml/dispatches',
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_GITHUB_TOKEN}`,
-            Accept: 'application/vnd.github+json',
-            'X-GitHub-Api-Version': '2022-11-28',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ ref: 'main' }),
-        }
-      );
-      setGameReminderStatus(res.status === 204 ? 'success' : 'error');
-    } catch {
-      setGameReminderStatus('error');
-    } finally {
-      setSendingGameReminders(false);
-    }
-  };
-
-  const handleCreateUser = async () => {
-    if (!newEmail || !newPassword || !newDisplayName) {
-      setError('Заполните все поля');
-      return;
-    }
-    setError(null);
-    setCreating(true);
-    try {
-      await createUserWithRole(newEmail, newPassword, newDisplayName, newRole);
-      const updated = await getAllUsers();
-      setUsers(updated);
-      setVkIdEdits((prev) => {
-        const next = { ...prev };
-        for (const u of updated) {
-          if (!(u.uid in next)) next[u.uid] = u.vkId ?? '';
-        }
-        return next;
-      });
-      setNewEmail('');
-      setNewPassword('');
-      setNewDisplayName('');
-      setNewRole('operator');
-    } catch {
-      setError('Ошибка при создании пользователя');
-    } finally {
-      setCreating(false);
-    }
-  };
-
-  const adminOptions = users.filter((user) => user.role === 'admin' && user.isActive);
-
-  return (
-    <div className="users-page">
-      <section className="users-page__section">
-        <h2 className="users-page__title">VK-уведомления</h2>
-        <div className="users-page__form">
-          <div className="users-page__subsection">
-            <h3 className="users-page__subtitle">Администратор для запросов на изменение расписания</h3>
-            <label className="users-page__inline-label">
-              Получатель уведомлений
-              <select
-                className="users-page__role-select"
-                value={selectedScheduleAdminUid}
-                onChange={(e) => setSelectedScheduleAdminUid(e.target.value)}
-              >
-                <option value="">Не выбран</option>
-                {adminOptions.map((admin) => (
-                  <option key={admin.uid} value={admin.uid}>
-                    {admin.displayName || admin.email}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <Button color="dark" onClick={handleScheduleAdminSave} disabled={savingScheduleAdmin}>
-              {savingScheduleAdmin ? 'Сохраняем...' : 'Сохранить получателя'}
-            </Button>
-          </div>
-
-          <Button color="dark" onClick={handleSendReminders} disabled={sendingReminders}>
-            {sendingReminders ? 'Запускаем...' : 'Отправить напоминания сейчас'}
-          </Button>
-          {reminderStatus === 'success' && (
-            <div className="users-page__success">
-              Рассылка запущена, сообщения придут в течение минуты
-            </div>
-          )}
-          {reminderStatus === 'error' && (
-            <div className="users-page__error">
-              Ошибка запуска, проверь `VITE_GITHUB_TOKEN` в `.env`
-            </div>
-          )}
-          <Button color="dark" onClick={handleSendGameReminders} disabled={sendingGameReminders}>
-            {sendingGameReminders ? 'Запускаем...' : 'Напомнить об играх завтра'}
-          </Button>
-          {gameReminderStatus === 'success' && (
-            <div className="users-page__success">
-              Рассылка запущена, сообщения придут в течение минуты
-            </div>
-          )}
-          {gameReminderStatus === 'error' && (
-            <div className="users-page__error">
-              Ошибка запуска, проверь `VITE_GITHUB_TOKEN` в `.env`
-            </div>
-          )}
-        </div>
-      </section>
-
-      <section className="users-page__section">
-        <h2 className="users-page__title">Создать пользователя</h2>
-        <div className="users-page__form">
-          <TextInput
-            label="Email"
-            value={newEmail}
-            onChange={(e) => setNewEmail(e.target.value)}
-            autoComplete="off"
-          />
-          <TextInput
-            label="Имя"
-            value={newDisplayName}
-            onChange={(e) => setNewDisplayName(e.target.value)}
-            autoComplete="off"
-          />
-          <PasswordInput
-            label="Пароль"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            autoComplete="new-password"
-          />
-          <Select
-            label="Роль"
-            value={newRole}
-            options={ROLES}
-            onChange={(e) => setNewRole(e.target.value as Role)}
-          />
-          {error && <div className="users-page__error">{error}</div>}
-          <Button color="dark" onClick={handleCreateUser}>
-            {creating ? 'Создание...' : 'Создать'}
-          </Button>
-        </div>
-      </section>
-
-      <section className="users-page__section">
-        <h2 className="users-page__title">Пользователи</h2>
-        {loading ? (
-          <p>Загрузка...</p>
-        ) : (
-          <table className="users-page__table">
-            <thead>
-              <tr>
-                <th>Имя</th>
-                <th>Email</th>
-                <th>Роль</th>
-                <th>Активность</th>
-                <th>VK ID</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr key={user.uid}>
-                  <td>{user.displayName}</td>
-                  <td>{user.email}</td>
-                  <td>
-                    <select
-                      className="users-page__role-select"
-                      value={user.role}
-                      onChange={(e) => handleRoleChange(user.uid, e.target.value as Role)}
-                    >
-                      {ROLES.map((r) => (
-                        <option key={r} value={r}>
-                          {ROLE_LABELS[r]}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td>
-                    <button
-                      className={`users-page__toggle ${user.isActive ? 'users-page__toggle--active' : ''}`}
-                      onClick={() => handleActiveToggle(user.uid, !user.isActive)}
-                      disabled={savingActive === user.uid}
-                    >
-                      <span className="users-page__toggle-thumb" />
-                      <span className="users-page__toggle-label">
-                        {savingActive === user.uid
-                          ? 'Сохраняем...'
-                          : user.isActive
-                          ? 'Активен'
-                          : 'Не активен'}
-                      </span>
-                    </button>
-                  </td>
-                  <td>
-                    <div className="users-page__vk-cell">
-                      <input
-                        className="users-page__vk-input"
-                        type="text"
-                        placeholder="123456789"
-                        value={vkIdEdits[user.uid] ?? ''}
-                        onChange={(e) =>
-                          setVkIdEdits((prev) => ({ ...prev, [user.uid]: e.target.value }))
-                        }
-                      />
-                      <button
-                        className="users-page__vk-save"
-                        onClick={() => handleVkIdSave(user.uid)}
-                        disabled={savingVkId === user.uid}
-                      >
-                        {savingVkId === user.uid ? '…' : 'OK'}
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </section>
-    </div>
-  );
+  return <main className="users-page">
+    <header className="users-page__header"><h1>Сотрудники</h1><p>Управляйте командой и доступом к работе с квестами.</p></header>
+    {error && <p className="users-page__error" role="alert">{error}</p>}
+    <section className="users-page__section" aria-labelledby="employees-title">
+      <div className="users-page__section-heading"><h2 id="employees-title">Команда {!loading && <span className="users-page__count">{users.length}</span>}</h2>
+        <button type="button" className="users-page__refresh" disabled={busy} aria-expanded={showCreate} aria-controls={showCreate ? 'create-employee' : undefined}
+          onClick={() => { setShowCreate(value => !value); setPassword(''); }}>{showCreate ? 'Закрыть форму' : '+ Добавить сотрудника'}</button>
+      </div>
+      {loading ? <p role="status" className="users-page__empty">Загружаем сотрудников…</p> : users.length === 0 ? <p className="users-page__empty">Список пуст. Нажмите «Добавить сотрудника», чтобы создать аккаунт.</p> :
+      <div className="users-page__table-wrap"><table className="users-page__table">
+        <thead><tr><th scope="col">Сотрудник</th><th scope="col">Почта</th><th scope="col">Системная роль</th><th scope="col">Рабочие роли</th><th scope="col">Квесты</th><th scope="col">Активность</th></tr></thead>
+        <tbody>{users.map(user => <tr key={user.id}>
+          <th scope="row" className="users-page__person"><span className="users-page__identity"><span className="users-page__avatar" aria-hidden="true">{user.name.trim().split(/\s+/).slice(0, 2).map(part => part[0]).join('')}</span><span>{user.name}</span></span></th>
+          <td data-label="Почта" className="users-page__email">{user.email}</td>
+          <td data-label="Системная роль">{isOwner ? <select aria-label={`Системная роль: ${user.name}`} disabled={busy} value={user.systemRole}
+            onChange={event => void mutate(() => setSystemRole(user.id, event.target.value as SystemRole))}>
+            {Object.entries(systemRoleLabels).map(([role, label]) => <option key={role} value={role}>{label}</option>)}
+          </select> : systemRoleLabels[user.systemRole]}</td>
+          <td data-label="Рабочие роли"><div className="users-page__roles">{user.businessRoles.length
+            ? user.businessRoles.map(role => <span className="users-page__role users-page__role--active" key={role}>{labels[role]}</span>) : '—'}</div></td>
+          <td data-label="Квесты"><button type="button" className="users-page__refresh" aria-haspopup="dialog" disabled={busy}
+            aria-label={`Настроить квесты: ${user.name}`} onClick={() => setQuestUser(user)}>Настроить</button></td>
+          <td data-label="Активность">
+            <button type="button" className={`users-page__activity${user.isActive ? ' users-page__activity--active' : ''}`}
+              role="switch" aria-checked={user.isActive} aria-label={`Активность: ${user.name}`}
+              disabled={busy || (!isOwner && user.systemRole === 'OWNER')}
+              onClick={() => void mutate(() => setUserActivity(user.id, !user.isActive))}>
+              <span aria-hidden="true" />{user.isActive ? 'Активен' : 'Неактивен'}
+            </button>
+          </td>
+        </tr>)}</tbody>
+      </table></div>}
+    </section>
+    {showCreate && <section id="create-employee" className="users-page__section" aria-labelledby="create-employee-title">
+      <div className="users-page__section-heading"><div><h2 id="create-employee-title">Новый сотрудник</h2><p>{isOwner ? 'Создайте аккаунт и выберите системную роль.' : 'Новые аккаунты создаются с ролью «Сотрудник».'}</p></div></div>
+      <form className="users-page__form" onSubmit={handleCreate}>
+        <fieldset disabled={busy}>
+          <label>Имя<input type="text" autoComplete="name" autoFocus value={name} required onChange={event => setName(event.target.value)} /></label>
+          <label>Электронная почта<input type="email" autoComplete="off" value={email} required onChange={event => setEmail(event.target.value)} /></label>
+          <label>Пароль<input type="password" autoComplete="new-password" minLength={6} value={password} required onChange={event => setPassword(event.target.value)} /><span className="users-page__field-hint">Не менее 6 символов</span></label>
+          {isOwner && <label>Системная роль<select value={systemRole} onChange={event => setRole(event.target.value as SystemRole)}>
+            {Object.entries(systemRoleLabels).map(([role, label]) => <option key={role} value={role}>{label}</option>)}
+          </select></label>}
+        </fieldset>
+        <button type="submit" className="users-page__create" disabled={busy}>{busy ? 'Сохраняем…' : '+ Добавить сотрудника'}</button>
+      </form>
+    </section>}
+    {questUser && <UserQuestsDialog user={questUser} onClose={() => setQuestUser(null)} onSaved={() => {
+      setQuestUser(null);
+      void mutate(async () => {});
+    }} />}
+  </main>;
 };
-
 export default UsersPage;

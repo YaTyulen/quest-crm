@@ -1,4 +1,3 @@
-import { Timestamp } from 'firebase/firestore';
 import type { Role } from './roles';
 
 export interface ScheduleSlot {
@@ -17,10 +16,10 @@ export interface UserSchedule {
   availability: {
     [date: string]: DaySchedule;
   };
-  updatedAt: Timestamp | Date;
+  updatedAt: string | Date;
   isActive: boolean;
   role?: Role;
-  firstFilledAt?: { [date: string]: Timestamp | Date };
+  firstFilledAt?: { [date: string]: string | Date };
 }
 
 export interface AvailabilityInfo {
@@ -29,7 +28,7 @@ export interface AvailabilityInfo {
   isAvailable: boolean;
 }
 
-// Тип для данных из Firestore (без id)
+// Тип для данных из API (без id)
 export type UserScheduleData = Omit<UserSchedule, 'id'>;
 
 // Тип для создания нового расписания

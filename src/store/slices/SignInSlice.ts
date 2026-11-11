@@ -1,35 +1,25 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { Role } from '../../types/roles';
-
+import type { UserProfile } from '../../types/roles';
 interface SignInState {
   isAuth: boolean;
-  role: Role | null;
+  user: UserProfile | null;
+  loading: boolean;
 }
-
-const currentIsAuth = localStorage.getItem('isAuth') === 'true';
-const currentRole = (localStorage.getItem('role') as Role) || null;
-
-const initialState: SignInState = {
-  isAuth: currentIsAuth,
-  role: currentRole,
-};
-
+const initialState: SignInState = { isAuth: false, user: null, loading: true };
 export const signInSlice = createSlice({
-  name: 'signIn',
-  initialState,
+  name: 'signIn', initialState,
   reducers: {
-    setIsAuth(state, action: PayloadAction<boolean>) {
-      state.isAuth = action.payload;
-      if (!action.payload) {
-        state.role = null;
-        localStorage.removeItem('role');
-      }
+    setUser(state, action: PayloadAction<UserProfile>) {
+      state.user = action.payload;
+      state.isAuth = true;
+      state.loading = false;
     },
-    setRole(state, action: PayloadAction<Role>) {
-      state.role = action.payload;
-      localStorage.setItem('role', action.payload);
+    clearUser(state) {
+      state.user = null;
+      state.isAuth = false;
+      state.loading = false;
     },
+    setLoading(state, action: PayloadAction<boolean>) { state.loading = action.payload; },
   },
 });
-
 export default signInSlice.reducer;

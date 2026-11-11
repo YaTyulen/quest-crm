@@ -1,0 +1,17 @@
+.notifications-page {
+  box-sizing: border-box;
+  min-height: 100%;
+  padding: clamp(20px, 4vw, 52px);
+  color: #161629;
+  background: linear-gradient(125deg, #f4f3fa, #faf4ef);
+  h1 { margin: 0 0 24px; font-size: clamp(30px, 4vw, 48px); }
+  section { max-width: 680px; padding: clamp(18px, 3vw, 28px); border: 1px solid #ece6f1; border-radius: 20px; background: #fff; }
+  h2, p { margin: 0 0 12px; }
+  form, label { display: grid; gap: 8px; }
+  textarea { box-sizing: border-box; width: 100%; padding: 10px 12px; border: 1px solid #d8d3e4; border-radius: 10px; font: inherit; resize: vertical; }
+  button { justify-self: start; padding: 10px 16px; border-radius: 10px; background: #514062; color: #fff; }
+  button:disabled { opacity: .6; }
+  &__hint { color: #625c71; font-size: .875rem; }
+  [role='alert'] { color: #96243d; margin: 12px 0 0; }
+  [role='status'] { margin-top: 12px; }
+}

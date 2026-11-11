@@ -1,12 +1,14 @@
 .private-layout {
-    display: grid;
-    grid-template-columns: 60px auto;
+    display: flex;
     height: 100vh;
     overflow-y: hidden;
 }
 
 .page-container {
+    flex: 1;
+    min-width: 0;
     overflow-y: auto;
+    scrollbar-gutter: stable;
     height: 100%;
 }
 
@@ -17,7 +19,7 @@
 
   .private-layout {
     display: block;
-    height: calc(100vh - 70px);
+    height: calc(100dvh - 70px - env(safe-area-inset-bottom));
   }
 }
 

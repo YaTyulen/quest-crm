@@ -1,0 +1,38 @@
+.profile-page {
+  box-sizing: border-box;
+  min-height: 100%;
+  padding: clamp(24px, 5vw, 64px);
+  color: #161629;
+  background: linear-gradient(125deg, #f4f3fa, #faf4ef);
+  h1 { margin: 0; font-size: clamp(28px, 4vw, 44px); }
+  &__header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
+  &__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(290px, 100%), 1fr)); align-items: start; gap: 20px; }
+  &__card { min-width: 0; padding: clamp(18px, 3vw, 30px); border: 1px solid #ece6f1; border-radius: 24px; background: #ffffffd9; box-shadow: 0 12px 40px #24203808; }
+  &__card-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+  &__card-heading h2 { margin: 0; }
+  &__edit { display: grid; flex: 0 0 42px; height: 42px; place-items: center; padding: 0; border: 0; border-radius: 12px; color: #654985; background: #f2ecfa; }
+  &__edit:hover:not(:disabled), &__edit[aria-expanded='true'] { background: #e9def6; }
+  &__edit svg { width: 18px; height: 18px; }
+  &__edit span { font-size: 26px; line-height: 1; }
+  &__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  &__cancel { padding: 10px 16px; border-radius: 10px; color: #514062; background: #f2ecfa; }
+  &__password-action { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+  &__password-action p { margin: 0; }
+  &__form { display: grid; gap: 14px; }
+  &__form label { display: grid; gap: 6px; font-size: 14px; font-weight: 550; }
+  &__form input { box-sizing: border-box; width: 100%; padding: 10px 12px; border: 1px solid #d8d3e4; border-radius: 10px; background: #fff; color: inherit; font: inherit; }
+  &__button { justify-self: start; padding: 10px 16px; border-radius: 10px; background: #514062; color: white; }
+  &__button:disabled { opacity: .55; }
+  &__form p { margin: 0; }
+  [role='status'] { color: #215e47; }
+  :is(button, input):focus-visible { outline: 2px solid #8058d5; outline-offset: 3px; }
+  h2 { margin-top: 0; overflow-wrap: anywhere; }
+  dt { color: #74748b; font-size: 14px; }
+  dd { margin: 4px 0 24px; overflow-wrap: anywhere; }
+  dl { margin: 0; }
+  dd:last-child { margin-bottom: 0; }
+  &__logout { padding: 12px 20px; border-radius: 12px; color: #fff; background: #393647; }
+  &__logout:disabled { opacity: .6; cursor: wait; }
+  &__logout:focus-visible { outline: 2px solid #8058d5; outline-offset: 4px; }
+  [role='alert'] { color: #b52238; }
+}

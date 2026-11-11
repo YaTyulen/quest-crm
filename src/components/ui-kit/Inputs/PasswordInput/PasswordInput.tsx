@@ -9,18 +9,20 @@ interface PasswordInputProps {
     value: string,
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
     autoComplete?: string
+    required?: boolean
+    minLength?: number
 }
 
-export const PasswordInput = ({label, value, onChange, autoComplete}: PasswordInputProps) => {
+export const PasswordInput = ({label, value, onChange, autoComplete, required, minLength}: PasswordInputProps) => {
     const [type, setType] = useState('password')
 
   return (
     <div className="password-input__container">
         <div className='password-input__field'>
-            <input name={label} className="password-input__input" type={type} value={value} placeholder='' onChange={onChange} autoComplete={autoComplete}/>
+            <input name={label} className="password-input__input" type={type} value={value} placeholder='' onChange={onChange} autoComplete={autoComplete} required={required} minLength={minLength}/>
             <label className="password-input__label">{label}</label>
         </div>
-        
+
         <button className='password-input__button' type='button' onMouseDown={() => setType('text')} onMouseUp={() => setType('password')} onMouseLeave={() => setType('password')} onTouchStart={() => setType('text')} onTouchEnd={() => setType('password')} onTouchCancel={() => setType('password')}>
             {type=== 'password' ? <Eye/> : <LowEye/>}
         </button>

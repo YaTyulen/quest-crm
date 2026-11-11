@@ -1,70 +1,51 @@
-# React + TypeScript + Vite
+# Quest CRM
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Владельцы и активность сотрудников
 
-Currently, two official plugins are available:
+Владелец (OWNER) управляет системными ролями и создаёт квесты. Администратор (ADMIN) сохраняет остальные возможности управления, но создаёт только сотрудников (USER). Изменение учётной записи владельца, в том числе активности и пароля, доступно только владельцам. Последнего активного владельца нельзя удалить, отключить или понизить.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+В списке пользователей активность меняется через PATCH /users/:id/activity. Неактивный аккаунт сохраняет историю, но не может войти, заполнять расписание или получать новые назначения. Его отметки не учитываются в расписании команды и автозакрытии слотов.
 
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Миграции 20261111090000_owner_role и 20261111090100_user_activity добавляют новую роль и флаг активности. Все существующие аккаунты остаются активными, самый ранний администратор становится владельцем. На новой установке первый аккаунт создаётся владельцем. После применения миграций нужно обновить Prisma Client, пересобрать и перезапустить сервер.
 
-## Expanding the ESLint configuration
+React + TypeScript + Vite. Фронтенд подключается к REST API quest-crm-back.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Настройка
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Скопируйте `.env.example` в `.env`. Для разработки используйте:
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```dotenv
+VITE_API_BASE_URL=/api
+API_PROXY_TARGET=http://localhost:3000
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Укажите фактический порт бэкенда в API_PROXY_TARGET. Vite проксирует /api на бэкенд, поэтому refresh-cookie работает через адрес фронтенда. Для локального HTTP на бэкенде нужен COOKIE_SECURE=false.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Установка: `npm ci`. Разработка: `npm run dev`. Сборка: `npm run build`.
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Авторизация
+
+POST /auth/login принимает email и password. Access JWT хранится только в памяти и передаётся в Authorization: Bearer. Refresh-токен используется только через HttpOnly cookie; значение из JSON ответа login не сохраняется.
+
+При загрузке приложения выполняются POST /auth/refresh и GET /users/me. Параллельные запросы с 401 используют одно обновление токена; каждый запрос повторяется не более одного раза. При недействительной сессии приложение возвращается к форме входа. Ошибка сети при восстановлении показывает кнопку повторного подключения.
+
+POST /auth/logout отзывает refresh-токен на сервере, затем очищается локальная сессия. Если запрос выхода не удался, показывается ошибка и выход можно повторить.
+
+Права берутся из /users/me: системная роль ADMIN/USER и массив рабочих ролей OPERATOR/ACTOR. Старые флаги isAuth и role из localStorage удаляются.
+
+## Размещение
+
+Для GitHub Pages задайте переменную репозитория VITE_API_BASE_URL с полным HTTPS-адресом API и суффиксом /api. Относительный /api работает в разработке через Vite либо в продакшене при наличии reverse proxy; GitHub Pages такого proxy не предоставляет.
+
+Текущий бэкенд использует cors() и refresh-cookie SameSite=Strict. Для запросов между origin необходимо настроить на бэкенде конкретный origin фронтенда и credentials=true. Если фронтенд и API находятся на разных сайтах, текущая cookie не позволит восстановить сессию: потребуется same-site размещение либо изменение cookie на SameSite=None; Secure с учётом политики браузера. Настройка только фронтенда эту проблему не решает.
+
+## Этап перехода
+
+Firebase SDK, конфигурация, прямые обращения к Firestore и скрипты/расписания рассылок удалены. Данные на старом сервере не изменяются.
+
+Доступны вход, восстановление сессии, выход, список/создание пользователей и управление системными и рабочими ролями. Вкладка «Квесты» доступна только администраторам: выбор/создание квеста, загрузка и создание общих шаблонов слотов через GET/POST /slots, редактирование через PUT /slots/:id. Изменения общего слота действуют во всех квестах, где он используется. Слот содержит time (HH:MM), положительный целый order и isActive. Привязка слотов к выбранному квесту загружается через GET /quests/:questId/slots и сохраняется через PUT на тот же адрес с полным массивом slotIds. Можно отменить несохранённые изменения или снять все привязки, сохранив пустой выбор. Страница разделена на три независимо сворачиваемых раздела: выбор квеста, общий список слотов и слоты выбранного квеста. В общем списке доступны создание, редактирование и удаление через DELETE /slots/:id; удаление используемых слотов запрещает API. Раздел квеста сначала показывает привязанные времена, а выбор слотов открывается по кнопке с карандашом. Недельная сетка будет добавлена отдельно. Список пользователей дополняется отдельными запросами бизнес-ролей, поскольку текущий GET /users их не возвращает.
+
+Раздел «Моё расписание» использует GET /users/:userId/quests, GET /settings и GET/PUT /availability/me. Даты формируются по локальному календарю, число отображаемых дней (включая сегодня) берётся из availabilityHorizonDays. Показываются активные слоты выбранного квеста. Первый клик переводит null в true, дальнейшие переключают true/false; возврата к null нет. Изменения сохраняются сразу отдельным запросом для слота. Общее расписание подключено через GET /availability/overview: выбор квеста и дня, имена доступных сотрудников, число недоступных с подсказкой и список missingUsers над сеткой. Пользователи с несколькими рабочими ролями учитываются один раз по ID. Обе вкладки используют единый период и обновляют текущую дату раз в минуту и при возврате в окно. Записи на игры, аналитика, заявки и уведомления временно отключены до появления API. Прямые URL этих разделов показывают сообщение о недоступности. VK ID и активность пользователей пока не редактируются.
+
+При переносе старых аккаунтов нужно определить новые пароли: новый API проверяет bcrypt-хеши и не использует учётные записи Firebase.
+Вкладка «Бронирования» доступна администраторам и показывает записи из `GET /bookings` в порядке поступления. Вкладка «Сетка квеста» использует `GET /availability/overview` и активные слоты квеста, показывает бронь и закрытие на месяц вперёд с сегодняшнего дня. Для этих вкладок нужна версия бэкенда с API бронирований.
